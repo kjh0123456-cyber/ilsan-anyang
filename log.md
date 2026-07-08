@@ -62,3 +62,8 @@
 - 2026-07-08 11:34:24 | C:\Users\김종해\claude\ilsan-anyang\__tests__\create-product.test.ts
 - 2026-07-08 11:35:33 | C:\Users\김종해\claude\ilsan-anyang\app\admin\products\new\page.tsx
 - 2026-07-08 11:36:03 | C:\Users\김종해\claude\ilsan-anyang\app\admin\products\new\page.tsx
+- 2026-07-08 11:48:05 | C:\temp\claude\C--Users-----claude\184dc545-7187-4f8b-badc-34822a5352ec\scratchpad\add-admin.mjs
+- 2026-07-08 11:50:00 | C:\temp\claude\C--Users-----claude\184dc545-7187-4f8b-badc-34822a5352ec\scratchpad\reset-password.mjs
+- 2026-07-08 11:52:28 | C:\Users\김종해\claude\ilsan-anyang\__tests__\request-password-reset.test.ts
+- 2026-07-08 11:53:06 | C:\Users\김종해\claude\ilsan-anyang\app\auth\forgot-password\page.tsx
+- 2026-07-08 11:53:16 | C:\Users\김종해\claude\ilsan-anyang\app\auth\reset-password\page.tsx

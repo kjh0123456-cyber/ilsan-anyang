@@ -49,3 +49,17 @@ export async function getUser() {
   } = await supabase.auth.getUser();
   return user;
 }
+
+export async function requestPasswordReset(formData: FormData) {
+  const email = ((formData.get("email") as string) ?? "").trim();
+  if (!email) return { error: "이메일을 입력해주세요." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/reset-password`,
+  });
+
+  if (error) return { error: "재설정 링크 발송에 실패했습니다." };
+
+  return { success: true };
+}
