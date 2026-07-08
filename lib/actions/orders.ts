@@ -2,6 +2,10 @@
 
 import { createClient } from "@/lib/supabase/server";
 import type { Order, CartItem } from "@/lib/types";
+import {
+  sendOrderConfirmationEmail,
+  sendAdminOrderNotificationEmail,
+} from "@/lib/email";
 
 export async function createOrder(
   items: CartItem[],
@@ -32,6 +36,20 @@ export async function createOrder(
     .from("order_items")
     .insert(orderItems);
   if (itemsError) throw new Error("주문 상품 저장 실패");
+
+  if (user.email) {
+    const emailData = { orderId: order.id, items, totalAmount };
+    try {
+      await sendOrderConfirmationEmail(user.email, emailData);
+    } catch (error) {
+      console.error("주문 확인 이메일 발송 실패:", error);
+    }
+    try {
+      await sendAdminOrderNotificationEmail(user.email, emailData);
+    } catch (error) {
+      console.error("관리자 주문 알림 이메일 발송 실패:", error);
+    }
+  }
 
   return order.id;
 }

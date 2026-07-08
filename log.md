@@ -51,3 +51,8 @@
 - 2026-07-06 21:04:29 | C:\Users\김종해\claude\ilsan-anyang\app\admin\products\page.tsx
 - 2026-07-06 21:04:40 | C:\Users\김종해\claude\ilsan-anyang\app\admin\orders\page.tsx
 - 2026-07-06 21:06:22 | C:\Users\김종해\claude\.superpowers\sdd\task-11-12-report.md
+- 2026-07-08 09:45:32 | C:\Users\김종해\claude\ilsan-anyang\README.md
+- 2026-07-08 09:48:25 | C:\Users\김종해\claude\ilsan-anyang\__tests__\email.test.ts
+- 2026-07-08 09:48:45 | C:\Users\김종해\claude\ilsan-anyang\lib\email.ts
+- 2026-07-08 09:50:11 | C:\Users\김종해\claude\ilsan-anyang\__tests__\email.test.ts
+- 2026-07-08 09:51:07 | C:\Users\김종해\claude\ilsan-anyang\__tests__\orders.test.ts
