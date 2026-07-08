@@ -77,6 +77,22 @@ export default function Footer() {
                   주문조회
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/terms"
+                  className="hover:text-gold transition-colors"
+                >
+                  이용약관
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacy"
+                  className="hover:text-gold transition-colors"
+                >
+                  개인정보처리방침
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

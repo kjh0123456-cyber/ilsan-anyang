@@ -56,3 +56,5 @@
 - 2026-07-08 09:48:45 | C:\Users\김종해\claude\ilsan-anyang\lib\email.ts
 - 2026-07-08 09:50:11 | C:\Users\김종해\claude\ilsan-anyang\__tests__\email.test.ts
 - 2026-07-08 09:51:07 | C:\Users\김종해\claude\ilsan-anyang\__tests__\orders.test.ts
+- 2026-07-08 10:08:44 | C:\Users\김종해\claude\ilsan-anyang\app\terms\page.tsx
+- 2026-07-08 10:09:13 | C:\Users\김종해\claude\ilsan-anyang\app\privacy\page.tsx
