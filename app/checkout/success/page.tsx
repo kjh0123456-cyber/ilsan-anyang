@@ -19,7 +19,7 @@ export default async function CheckoutSuccessPage({
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center space-y-4">
         <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
-        <h1 className="text-2xl font-bold text-navy">결제가 완료되었습니다</h1>
+        <h1 className="text-xl font-bold text-navy">결제가 완료되었습니다</h1>
         <p className="text-muted-foreground">
           주문이 정상적으로 접수되었습니다.
         </p>

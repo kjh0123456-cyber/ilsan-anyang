@@ -11,7 +11,7 @@ export default function CartSummary() {
   const SHIPPING = total >= 50000 ? 0 : 3000;
 
   return (
-    <div className="bg-gray-50 rounded-lg p-6 space-y-4 sticky top-20">
+    <div className="bg-gray-50 rounded-lg p-8 space-y-4 sticky top-20">
       <h3 className="font-bold text-navy">주문 요약</h3>
       <div className="space-y-2 text-sm">
         <div className="flex justify-between">

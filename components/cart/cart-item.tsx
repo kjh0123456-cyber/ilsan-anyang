@@ -12,7 +12,7 @@ export default function CartItemRow({ item }: { item: CartItem }) {
 
   return (
     <div className="flex gap-4 py-4 border-b">
-      <div className="relative w-20 h-20 bg-gray-50 rounded overflow-hidden flex-shrink-0">
+      <div className="relative w-20 h-20 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
         {item.product.images[0] && (
           <Image
             src={item.product.images[0]}

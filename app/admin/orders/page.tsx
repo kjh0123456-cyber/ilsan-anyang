@@ -29,13 +29,13 @@ export default async function AdminOrdersPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-navy mb-6">주문 관리</h1>
+      <h1 className="text-xl font-bold text-navy mb-8">주문 관리</h1>
       {orders.length === 0 ? (
         <p className="text-muted-foreground">주문이 없습니다.</p>
       ) : (
         <div className="space-y-4">
           {orders.map((order) => (
-            <div key={order.id} className="bg-white border rounded-lg p-4">
+            <div key={order.id} className="bg-white border rounded-lg p-6">
               <div className="flex justify-between items-center mb-2">
                 <div>
                   <span className="text-xs text-muted-foreground">
@@ -50,7 +50,7 @@ export default async function AdminOrdersPage() {
                   <select
                     name="status"
                     defaultValue={order.status}
-                    className="text-sm border rounded px-2 py-1"
+                    className="text-sm border rounded-lg px-2 py-1"
                   >
                     {STATUS_OPTIONS.map((s) => (
                       <option key={s} value={s}>
@@ -60,7 +60,7 @@ export default async function AdminOrdersPage() {
                   </select>
                   <button
                     type="submit"
-                    className="text-xs bg-navy text-white px-3 py-1 rounded hover:bg-navy-light"
+                    className="text-xs bg-navy text-white px-3 py-1 rounded-lg hover:bg-navy-light"
                   >
                     변경
                   </button>

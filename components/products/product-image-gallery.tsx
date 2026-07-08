@@ -36,7 +36,7 @@ export default function ProductImageGallery({
             <button
               key={i}
               onClick={() => setSelected(i)}
-              className={`relative w-16 h-16 rounded border-2 overflow-hidden ${
+              className={`relative w-16 h-16 rounded-lg border-2 overflow-hidden ${
                 selected === i ? "border-gold" : "border-gray-200"
               }`}
             >

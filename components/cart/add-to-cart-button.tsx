@@ -19,7 +19,7 @@ export default function AddToCartButton({ product }: { product: Product }) {
   return (
     <Button
       onClick={handleClick}
-      className="w-full bg-navy hover:bg-navy-light text-white h-12 text-base"
+      className="w-full bg-navy hover:bg-navy-light text-white h-12 text-sm"
     >
       {added ? (
         <>

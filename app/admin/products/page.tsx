@@ -21,7 +21,7 @@ export default async function AdminProductsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-navy mb-6">상품 관리</h1>
+      <h1 className="text-xl font-bold text-navy mb-8">상품 관리</h1>
       <div className="bg-white rounded-lg border overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-muted-foreground">

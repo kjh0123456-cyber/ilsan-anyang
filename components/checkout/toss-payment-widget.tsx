@@ -65,7 +65,7 @@ export default function TossPaymentWidget({
       <Button
         onClick={handlePay}
         disabled={!ready}
-        className="w-full bg-navy hover:bg-navy-light text-white h-12 text-base"
+        className="w-full bg-navy hover:bg-navy-light text-white h-12 text-sm"
       >
         {ready ? `${formatPrice(amount)} 결제하기` : "결제 준비 중..."}
       </Button>

@@ -15,13 +15,13 @@ export default async function LoginPage({
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded-lg shadow-sm w-full max-w-md">
-        <h1 className="text-2xl font-bold text-navy mb-2">로그인</h1>
+      <div className="bg-white p-10 rounded-lg border border-gray-100 w-full max-w-md">
+        <h1 className="text-xl font-bold text-navy mb-2">로그인</h1>
         <p className="text-sm text-muted-foreground mb-6">
           일산안양 계정으로 로그인하세요
         </p>
         {errorMessage && (
-          <div className="mb-4 p-3 rounded bg-red-50 text-red-700 text-sm">
+          <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-700 text-sm">
             {errorMessage}
           </div>
         )}

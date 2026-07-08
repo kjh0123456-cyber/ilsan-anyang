@@ -24,7 +24,7 @@ export default async function CheckoutFailPage({
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center space-y-4">
         <XCircle className="h-16 w-16 text-red-500 mx-auto" />
-        <h1 className="text-2xl font-bold text-navy">결제에 실패했습니다</h1>
+        <h1 className="text-xl font-bold text-navy">결제에 실패했습니다</h1>
         <p className="text-muted-foreground">{message}</p>
         <Link href="/cart">
           <Button className="bg-navy hover:bg-navy-light text-white">

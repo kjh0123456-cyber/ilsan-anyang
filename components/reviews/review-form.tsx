@@ -18,7 +18,7 @@ export default function ReviewForm({ productId }: { productId: string }) {
   return (
     <form
       action={handleSubmit}
-      className="space-y-3 border rounded-lg p-4 bg-gray-50"
+      className="space-y-3 border rounded-lg p-6 bg-gray-50"
     >
       <input type="hidden" name="product_id" value={productId} />
       <p className="font-medium text-sm">리뷰 작성</p>
@@ -45,7 +45,7 @@ export default function ReviewForm({ productId }: { productId: string }) {
         name="content"
         rows={3}
         placeholder="제품 사용 후기를 남겨주세요"
-        className="w-full border rounded p-2 text-sm resize-none"
+        className="w-full border rounded-lg p-2 text-sm resize-none"
         required
       />
       <Button type="submit" size="sm" className="bg-navy hover:bg-navy-light text-white">

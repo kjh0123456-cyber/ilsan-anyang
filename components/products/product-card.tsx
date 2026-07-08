@@ -37,14 +37,14 @@ export default function ProductCard({ product }: { product: Product }) {
             </div>
           )}
         </div>
-        <div className="p-4">
+        <div className="p-5">
           <Badge variant="outline" className="text-xs mb-2 border-gold text-gold">
             {CATEGORY_LABELS[product.category]}
           </Badge>
           <h3 className="font-semibold text-navy text-sm leading-tight mb-1 line-clamp-2">
             {product.name}
           </h3>
-          <p className="text-lg font-bold text-navy">{formatPrice(product.price)}</p>
+          <p className="text-xl font-bold text-navy">{formatPrice(product.price)}</p>
         </div>
       </div>
     </Link>

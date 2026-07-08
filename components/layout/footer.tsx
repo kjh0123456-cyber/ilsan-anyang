@@ -3,10 +3,10 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="bg-navy text-white mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div>
-            <h3 className="text-lg font-bold mb-2">일산안양</h3>
+            <h3 className="text-xl font-bold mb-2">일산안양</h3>
             <p className="text-sm text-gray-400 leading-relaxed">
               가까운 일상, 스마트한 선택.<br />
               2026년 경기도에서 시작된<br />

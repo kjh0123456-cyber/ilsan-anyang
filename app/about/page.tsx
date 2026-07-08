@@ -2,10 +2,10 @@ export default function AboutPage() {
   return (
     <div>
       {/* 히어로 */}
-      <section className="bg-navy text-white py-24 px-4 text-center">
+      <section className="bg-navy text-white py-28 px-4 text-center">
         <div className="max-w-3xl mx-auto">
           <p className="text-gold font-medium mb-2">About Ilsan-Anyang</p>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">
             기술로 잇는 일상,
             <br />
             경기도에서 시작된 스마트홈
@@ -14,10 +14,10 @@ export default function AboutPage() {
       </section>
 
       {/* 브랜드 스토리 */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <section className="py-24 px-4">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="text-2xl font-bold text-navy mb-4">우리의 이야기</h2>
+            <h2 className="text-xl font-bold text-navy mb-4">우리의 이야기</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
               일산안양은 2026년 경기도 고양시에서 설립된 프리미엄 스마트홈
               가전 전문 브랜드입니다. 일산과 안양, 두 도시의 이름을 합쳐 만든
@@ -30,8 +30,8 @@ export default function AboutPage() {
               함께합니다.
             </p>
           </div>
-          <div className="bg-navy rounded-2xl p-8 text-white">
-            <div className="grid grid-cols-2 gap-6 text-center">
+          <div className="bg-navy rounded-lg p-10 text-white">
+            <div className="grid grid-cols-2 gap-8 text-center">
               {[
                 { value: "2026", label: "설립 연도" },
                 { value: "5종+", label: "제품 카테고리" },
@@ -39,7 +39,7 @@ export default function AboutPage() {
                 { value: "100%", label: "정품 보증" },
               ].map((stat) => (
                 <div key={stat.label}>
-                  <p className="text-3xl font-bold text-gold">{stat.value}</p>
+                  <p className="text-xl font-bold text-gold">{stat.value}</p>
                   <p className="text-sm text-gray-400 mt-1">{stat.label}</p>
                 </div>
               ))}
@@ -49,14 +49,14 @@ export default function AboutPage() {
       </section>
 
       {/* 미션 & 비전 */}
-      <section className="py-20 px-4 bg-gray-50">
+      <section className="py-24 px-4 bg-gray-50">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-navy mb-12 text-center">
+          <h2 className="text-xl font-bold text-navy mb-14 text-center">
             미션 & 비전
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white rounded-xl p-8 border border-gray-100">
-              <h3 className="text-gold font-bold text-lg mb-3">Mission</h3>
+            <div className="bg-white rounded-lg p-10 border border-gray-100">
+              <h3 className="text-gold font-bold text-xl mb-3">Mission</h3>
               <p className="text-navy font-semibold text-xl mb-2">
                 &quot;기술을 삶 속으로&quot;
               </p>
@@ -65,8 +65,8 @@ export default function AboutPage() {
                 일상을 더 편리하고 쾌적하게 변화시킵니다.
               </p>
             </div>
-            <div className="bg-white rounded-xl p-8 border border-gray-100">
-              <h3 className="text-gold font-bold text-lg mb-3">Vision</h3>
+            <div className="bg-white rounded-lg p-10 border border-gray-100">
+              <h3 className="text-gold font-bold text-xl mb-3">Vision</h3>
               <p className="text-navy font-semibold text-xl mb-2">
                 &quot;경기도 대표 스마트홈 브랜드&quot;
               </p>
@@ -80,9 +80,9 @@ export default function AboutPage() {
       </section>
 
       {/* 회사 정보 */}
-      <section className="py-16 px-4">
+      <section className="py-24 px-4">
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-2xl font-bold text-navy mb-8 text-center">
+          <h2 className="text-xl font-bold text-navy mb-10 text-center">
             회사 정보
           </h2>
           <table className="w-full text-sm">

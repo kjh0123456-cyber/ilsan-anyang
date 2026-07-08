@@ -26,22 +26,22 @@ export default async function HomePage() {
   return (
     <>
       {/* 히어로 */}
-      <section className="bg-navy text-white py-24 px-4">
+      <section className="bg-navy text-white py-28 px-4">
         <div className="max-w-7xl mx-auto">
           <p className="text-gold font-medium mb-2">Premium Smart Home</p>
-          <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4">
             가까운 일상,
             <br />
             스마트한 선택
           </h1>
-          <p className="text-gray-300 text-lg mb-8 max-w-md">
+          <p className="text-gray-300 text-sm mb-8 max-w-md">
             일산안양이 제안하는 프리미엄 스마트홈 가전으로
             <br />
             더 편리하고 지능적인 생활을 경험하세요.
           </p>
           <div className="flex gap-3">
             <Link href="/products">
-              <Button className="bg-gold hover:bg-gold-light text-navy font-semibold h-12 px-8">
+              <Button className="bg-gold hover:bg-gold-light text-white font-semibold h-12 px-8">
                 쇼핑하기
               </Button>
             </Link>
@@ -58,19 +58,19 @@ export default async function HomePage() {
       </section>
 
       {/* 카테고리 */}
-      <section className="py-16 px-4 bg-gray-50">
+      <section className="py-20 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl font-bold text-navy mb-8 text-center">
+          <h2 className="text-xl font-bold text-navy mb-10 text-center">
             카테고리
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             {CATEGORIES.map((cat) => (
               <Link
                 key={cat.value}
                 href={`/products?category=${cat.value}`}
-                className="bg-white rounded-xl p-6 text-center hover:border-gold border-2 border-transparent transition-colors group"
+                className="bg-white rounded-lg p-6 text-center hover:border-gold border-2 border-transparent transition-colors group"
               >
-                <div className="text-4xl mb-2">{cat.emoji}</div>
+                <div className="text-3xl mb-2">{cat.emoji}</div>
                 <p className="text-sm font-medium text-navy group-hover:text-gold transition-colors">
                   {cat.label}
                 </p>
@@ -82,10 +82,10 @@ export default async function HomePage() {
 
       {/* 추천 상품 */}
       {topProducts.length > 0 && (
-        <section className="py-16 px-4">
+        <section className="py-20 px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="flex justify-between items-center mb-8">
-              <h2 className="text-2xl font-bold text-navy">추천 상품</h2>
+            <div className="flex justify-between items-center mb-10">
+              <h2 className="text-xl font-bold text-navy">추천 상품</h2>
               <Link
                 href="/products"
                 className="flex items-center gap-1 text-sm text-muted-foreground hover:text-navy"
@@ -103,15 +103,15 @@ export default async function HomePage() {
       )}
 
       {/* 브랜드 강점 */}
-      <section className="py-16 px-4 bg-navy text-white">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      <section className="py-20 px-4 bg-navy text-white">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
           {[
             { title: "무료 배송", desc: "5만원 이상 구매 시\n전국 무료 배송" },
             { title: "정품 보증", desc: "모든 제품 제조사\n공식 A/S 지원" },
             { title: "30일 반품", desc: "구매 후 30일 이내\n조건 없는 반품" },
           ].map((item) => (
             <div key={item.title}>
-              <h3 className="text-gold font-bold text-lg mb-2">{item.title}</h3>
+              <h3 className="text-gold font-bold text-xl mb-2">{item.title}</h3>
               <p className="text-gray-400 text-sm whitespace-pre-line">
                 {item.desc}
               </p>

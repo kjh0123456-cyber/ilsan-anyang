@@ -15,7 +15,7 @@ export default function ReviewList({ reviews }: { reviews: Review[] }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-2xl font-bold">{avgRating.toFixed(1)}</span>
+        <span className="text-xl font-bold">{avgRating.toFixed(1)}</span>
         <div className="flex">
           {Array.from({ length: 5 }).map((_, i) => (
             <Star

@@ -44,7 +44,7 @@ export default async function AdminLayout({
           </Link>
         ))}
       </aside>
-      <main className="flex-1 p-8">{children}</main>
+      <main className="flex-1 p-10">{children}</main>
     </div>
   );
 }

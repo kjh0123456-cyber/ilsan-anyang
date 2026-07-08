@@ -67,13 +67,13 @@ const SECTIONS = [
 export default function PrivacyPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-2xl font-bold text-navy mb-2">개인정보처리방침</h1>
+      <h1 className="text-xl font-bold text-navy mb-2">개인정보처리방침</h1>
       <p className="text-sm text-muted-foreground mb-10">시행일: 2026년 7월 8일</p>
 
       <div className="space-y-8">
         {SECTIONS.map((section) => (
           <section key={section.title}>
-            <h2 className="text-lg font-semibold text-navy mb-2">
+            <h2 className="text-xl font-semibold text-navy mb-2">
               {section.title}
             </h2>
             <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">

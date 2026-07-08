@@ -48,11 +48,11 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Brand colors */
-  --color-navy: #0F1B2D;
-  --color-navy-light: #1a2f4a;
-  --color-gold: #C9A96E;
-  --color-gold-light: #d4b98a;
+  /* Brand colors: one neutral ink tone + one accent, each with a hover tint */
+  --color-navy: #18181B;
+  --color-navy-light: #3F3F46;
+  --color-gold: #2F6F5E;
+  --color-gold-light: #3F8F79;
 
   /* Font families */
   --font-sans: "Pretendard", system-ui, sans-serif;

@@ -44,9 +44,9 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-navy mb-6">결제</h1>
-      <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-2 text-sm">
+    <div className="max-w-2xl mx-auto px-4 py-12">
+      <h1 className="text-xl font-bold text-navy mb-8">결제</h1>
+      <div className="bg-gray-50 rounded-lg p-6 mb-6 space-y-2 text-sm">
         <p className="font-medium">주문 상품 ({items.length}종)</p>
         {items.map((item) => (
           <div
