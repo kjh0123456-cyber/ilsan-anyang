@@ -61,6 +61,6 @@ npm run dev
 
 ## 배포
 
-[Vercel](https://vercel.com)에 배포하도록 구성되어 있습니다. `master` 브랜치에 push하면 자동으로 Production에 배포됩니다.
+[Vercel](https://vercel.com)에 배포하도록 구성되어 있습니다. `master` 브랜치에 push하면 자동으로 Production에 배포되고, 그 외 브랜치에 push하면 Preview 환경에 배포됩니다.
 
 Production: https://ilsan-anyang.vercel.app
