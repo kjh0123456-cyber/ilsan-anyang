@@ -59,3 +59,6 @@
 - 2026-07-08 10:08:44 | C:\Users\김종해\claude\ilsan-anyang\app\terms\page.tsx
 - 2026-07-08 10:09:13 | C:\Users\김종해\claude\ilsan-anyang\app\privacy\page.tsx
 - 2026-07-08 10:49:48 | C:\Users\김종해\claude\ilsan-anyang\app\about\page.tsx
+- 2026-07-08 11:34:24 | C:\Users\김종해\claude\ilsan-anyang\__tests__\create-product.test.ts
+- 2026-07-08 11:35:33 | C:\Users\김종해\claude\ilsan-anyang\app\admin\products\new\page.tsx
+- 2026-07-08 11:36:03 | C:\Users\김종해\claude\ilsan-anyang\app\admin\products\new\page.tsx

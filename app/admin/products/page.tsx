@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { getAllProducts } from "@/lib/actions/products";
 import { formatPrice } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import type { Product } from "@/lib/types";
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -21,7 +23,14 @@ export default async function AdminProductsPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-bold text-navy mb-8">상품 관리</h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-xl font-bold text-navy">상품 관리</h1>
+        <Link href="/admin/products/new">
+          <Button className="bg-navy hover:bg-navy-light text-white">
+            상품 등록
+          </Button>
+        </Link>
+      </div>
       <div className="bg-white rounded-lg border overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-muted-foreground">
