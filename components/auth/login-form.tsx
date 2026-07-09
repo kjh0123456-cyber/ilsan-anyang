@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
+import type { AnimationEvent } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { login } from "@/lib/actions/auth";
@@ -8,24 +9,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+// Chrome (and some other browsers) can silently pre-fill a saved
+// email/password on page load without selecting the text the way an
+// explicit autofill-dropdown pick does. That leaves stray content sitting
+// in the field, so the next keystroke lands wherever the cursor happens to
+// be instead of replacing it. `animationstart` (paired with the
+// `.autofill-detect` CSS in globals.css) fires the instant the browser
+// autofills a field, no matter when that happens — so we select the
+// autofilled text right then, guaranteeing the next keystroke replaces it
+// instead of appending. Clearing on mount only catches the earliest,
+// synchronous case; this catches autofill at any point.
+function selectOnAutofill(e: AnimationEvent<HTMLInputElement>) {
+  if (e.animationName === "onAutoFill") {
+    e.currentTarget.select();
+  }
+}
+
 export default function LoginForm({ redirectTo }: { redirectTo: string }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    // Some browsers silently pre-fill the password field with a
-    // previously-saved value on page load, without selecting the text the
-    // way an explicit autofill-dropdown pick does. That leaves stray content
-    // sitting in the field, so the next keystroke lands wherever the cursor
-    // happens to be instead of replacing it. Force the field back to
-    // genuinely empty right after mount; a deliberate autofill selection
-    // made later by the user (via the browser's suggestion dropdown) still
-    // works normally since it happens after this runs.
-    if (passwordRef.current) {
-      passwordRef.current.value = "";
-    }
+    if (emailRef.current) emailRef.current.value = "";
+    if (passwordRef.current) passwordRef.current.value = "";
   }, []);
 
   function handleSubmit(formData: FormData) {
@@ -59,12 +68,15 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
       <div className="space-y-2">
         <Label htmlFor="email">이메일</Label>
         <Input
+          ref={emailRef}
           id="email"
           name="email"
           type="email"
           autoComplete="email"
           required
           placeholder="hello@example.com"
+          className="autofill-detect"
+          onAnimationStart={selectOnAutofill}
         />
       </div>
       <div className="space-y-2">
@@ -77,6 +89,8 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
           autoComplete="current-password"
           required
           placeholder="••••••••"
+          className="autofill-detect"
+          onAnimationStart={selectOnAutofill}
         />
       </div>
       <Button

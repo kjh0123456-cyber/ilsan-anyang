@@ -140,3 +140,7 @@
 - 2026-07-09 16:50:16 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-buynow-full-flow.js
 - 2026-07-09 16:51:01 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\debug-signup.js
 - 2026-07-09 17:19:03 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-signup-buynow-full.js
+- 2026-07-09 17:25:22 | C:\Users\김종해\.claude\projects\C--Users-----claude\memory\ilsan_anyang_auth_flow.md
+- 2026-07-09 17:35:51 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\repro-buynow-login.js
+- 2026-07-09 17:37:38 | C:\Users\김종해\claude\ilsan-anyang\components\auth\login-form.tsx
+- 2026-07-09 17:39:02 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-autofill-wiring.js
