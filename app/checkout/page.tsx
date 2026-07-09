@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/use-cart";
 import { getProductById } from "@/lib/actions/products";
 import { createClient } from "@/lib/supabase/client";
@@ -19,6 +20,8 @@ function CheckoutContent() {
   const [buyNowItem, setBuyNowItem] = useState<CartItem | null>(null);
   const [loadingBuyNow, setLoadingBuyNow] = useState(!!buyNowId);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [authError, setAuthError] = useState(false);
+  const [authRetryKey, setAuthRetryKey] = useState(0);
   const [tossOrderId] = useState(() => crypto.randomUUID());
 
   const items = useMemo(
@@ -33,24 +36,38 @@ function CheckoutContent() {
   const finalAmount = total + SHIPPING;
 
   useEffect(() => {
-    async function prepare() {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    let cancelled = false;
 
-      if (!user) {
-        router.push(
-          `/auth/login?redirect=${encodeURIComponent(
-            `/checkout${window.location.search}`
-          )}`
-        );
-        return;
+    async function prepare() {
+      setAuthError(false);
+      try {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (cancelled) return;
+
+        if (!user) {
+          router.push(
+            `/auth/login?redirect=${encodeURIComponent(
+              `/checkout${window.location.search}`
+            )}`
+          );
+          return;
+        }
+        setUserEmail(user.email ?? "");
+      } catch {
+        // Transient network failure talking to Supabase Auth — don't strand
+        // the user on an infinite "불러오는 중..." with no way out.
+        if (!cancelled) setAuthError(true);
       }
-      setUserEmail(user.email ?? "");
     }
     prepare();
-  }, [router]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [router, authRetryKey]);
 
   useEffect(() => {
     if (!buyNowId) return;
@@ -66,6 +83,22 @@ function CheckoutContent() {
       cancelled = true;
     };
   }, [buyNowId, buyNowQty]);
+
+  if (authError) {
+    return (
+      <div className="text-center py-20 space-y-3">
+        <p className="text-muted-foreground">
+          로그인 상태를 확인하지 못했습니다. 네트워크 연결을 확인해주세요.
+        </p>
+        <Button
+          variant="outline"
+          onClick={() => setAuthRetryKey((k) => k + 1)}
+        >
+          다시 시도
+        </Button>
+      </div>
+    );
+  }
 
   if (loadingBuyNow || userEmail === null) {
     return (

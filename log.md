@@ -139,3 +139,4 @@
 - 2026-07-09 16:47:34 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-buynow-auth.js
 - 2026-07-09 16:50:16 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-buynow-full-flow.js
 - 2026-07-09 16:51:01 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\debug-signup.js
+- 2026-07-09 17:19:03 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-signup-buynow-full.js
