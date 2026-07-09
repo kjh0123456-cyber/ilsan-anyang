@@ -103,3 +103,7 @@
 - 2026-07-09 14:50:16 | C:\Users\김종해\claude\ilsan-anyang\components\admin\product-form.tsx
 - 2026-07-09 14:51:31 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-preview-modal.js
 - 2026-07-09 14:51:59 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-cancel.js
+- 2026-07-09 15:02:13 | C:\Users\김종해\claude\ilsan-anyang\components\auth\login-form.tsx
+- 2026-07-09 15:03:00 | C:\Users\김종해\claude\ilsan-anyang\app\auth\login\page.tsx
+- 2026-07-09 15:03:47 | C:\Users\김종해\claude\ilsan-anyang\__tests__\login.test.ts
+- 2026-07-09 15:04:51 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-login.js
