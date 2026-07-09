@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getProducts } from "@/lib/actions/products";
@@ -23,36 +24,55 @@ export default async function HomePage() {
     topProducts = [];
   }
 
+  const heroProduct = topProducts[0];
+
   return (
     <>
       {/* 히어로 */}
-      <section className="bg-gradient-to-br from-gold/12 via-background to-background py-28 px-4">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-gold font-medium mb-2">Premium Smart Home</p>
-          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-navy">
-            가까운 일상,
-            <br />
-            스마트한 선택
-          </h1>
-          <p className="text-muted-foreground text-sm mb-8 max-w-md">
-            일산안양이 제안하는 프리미엄 스마트홈 가전으로
-            <br />
-            더 편리하고 지능적인 생활을 경험하세요.
-          </p>
-          <div className="flex gap-3">
-            <Link href="/products">
-              <Button className="bg-gold hover:bg-gold-light text-white font-semibold h-12 px-8">
-                쇼핑하기
-              </Button>
-            </Link>
-            <Link href="/about">
-              <Button
-                variant="outline"
-                className="border-2 border-navy text-navy hover:bg-navy/5 h-12 px-8"
-              >
-                브랜드 소개
-              </Button>
-            </Link>
+      <section className="bg-gradient-to-br from-gold/12 via-background to-background py-20 px-4">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 items-center gap-12">
+          <div>
+            <p className="text-gold font-medium mb-2">Premium Smart Home</p>
+            <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-navy">
+              가까운 일상,
+              <br />
+              스마트한 선택
+            </h1>
+            <p className="text-muted-foreground text-sm mb-8 max-w-md">
+              일산안양이 제안하는 프리미엄 스마트홈 가전으로
+              <br />
+              더 편리하고 지능적인 생활을 경험하세요.
+            </p>
+            <div className="flex gap-3">
+              <Link href="/products">
+                <Button className="bg-gold hover:bg-gold-light text-white font-semibold h-12 px-8">
+                  쇼핑하기
+                </Button>
+              </Link>
+              <Link href="/about">
+                <Button
+                  variant="outline"
+                  className="border-2 border-navy text-navy hover:bg-navy/5 h-12 px-8"
+                >
+                  브랜드 소개
+                </Button>
+              </Link>
+            </div>
+          </div>
+          <div className="relative aspect-square max-w-md w-full mx-auto rounded-2xl overflow-hidden shadow-xl border border-gold/15 bg-white">
+            {heroProduct?.images[0] ? (
+              <Image
+                src={heroProduct.images[0]}
+                alt={heroProduct.name}
+                fill
+                priority
+                className="object-cover"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center text-7xl">
+                🏠
+              </div>
+            )}
           </div>
         </div>
       </section>
