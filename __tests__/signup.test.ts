@@ -1,9 +1,21 @@
 jest.mock("../lib/supabase/server", () => ({
   createClient: jest.fn(),
 }));
+jest.mock("next/cache", () => ({
+  revalidatePath: jest.fn(),
+}));
+jest.mock("next/navigation", () => ({
+  redirect: jest.fn((url: string) => {
+    throw new Error(`REDIRECT:${url}`);
+  }),
+}));
+jest.mock("../lib/actions/cart", () => ({
+  mergeGuestCartIntoAccount: jest.fn(),
+}));
 
 import { createClient } from "@/lib/supabase/server";
 import { signup } from "@/lib/actions/auth";
+import { mergeGuestCartIntoAccount } from "@/lib/actions/cart";
 
 function mockSupabase(result: { data: { session: unknown }; error: unknown }) {
   const signUp = jest.fn().mockResolvedValue(result);
@@ -62,22 +74,19 @@ describe("signup", () => {
     expect(result).toEqual({ error: "회원가입에 실패했습니다." });
   });
 
-  it("이메일 인증이 꺼져 있어 세션이 즉시 생기면 hasSession: true와 redirect 대상을 반환한다", async () => {
+  it("이메일 인증이 꺼져 있어 세션이 즉시 생기면 redirect 대상으로 이동한다", async () => {
     const signUp = mockSupabase({
       data: { session: { access_token: "t" } },
       error: null,
     });
 
-    const result = await signup(buildFormData());
+    await expect(signup(buildFormData())).rejects.toThrow(
+      "REDIRECT:/checkout?buyNow=p1&qty=1"
+    );
 
     expect(signUp).toHaveBeenCalledWith({
       email: "buyer@test.com",
       password: "password1",
-    });
-    expect(result).toEqual({
-      success: true,
-      redirectTo: "/checkout?buyNow=p1&qty=1",
-      hasSession: true,
     });
   });
 
@@ -93,13 +102,30 @@ describe("signup", () => {
     });
   });
 
-  it("redirect 파라미터가 없으면 기본값 '/'를 사용한다", async () => {
+  it("redirect 파라미터가 없으면 기본값 '/'로 이동한다", async () => {
     mockSupabase({ data: { session: { access_token: "t" } }, error: null });
-    const result = await signup(buildFormData({ redirect: "" }));
-    expect(result).toEqual({
-      success: true,
-      redirectTo: "/",
-      hasSession: true,
-    });
+    await expect(signup(buildFormData({ redirect: "" }))).rejects.toThrow(
+      "REDIRECT:/"
+    );
+  });
+
+  it("세션이 즉시 생기고 guestCart가 있으면 리다이렉트 전에 병합한다", async () => {
+    mockSupabase({ data: { session: { access_token: "t" } }, error: null });
+    const guestCart = [{ productId: "p1", quantity: 1 }];
+
+    await expect(
+      signup(buildFormData({ guestCart: JSON.stringify(guestCart) }))
+    ).rejects.toThrow("REDIRECT:/checkout?buyNow=p1&qty=1");
+
+    expect(mergeGuestCartIntoAccount).toHaveBeenCalledWith(guestCart);
+  });
+
+  it("세션이 없으면(이메일 인증 필요) guestCart가 있어도 병합하지 않는다", async () => {
+    mockSupabase({ data: { session: null }, error: null });
+    const guestCart = [{ productId: "p1", quantity: 1 }];
+
+    await signup(buildFormData({ guestCart: JSON.stringify(guestCart) }));
+
+    expect(mergeGuestCartIntoAccount).not.toHaveBeenCalled();
   });
 });

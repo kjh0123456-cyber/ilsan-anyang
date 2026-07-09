@@ -1,6 +1,9 @@
 jest.mock("../lib/supabase/server", () => ({
   createClient: jest.fn(),
 }));
+jest.mock("next/cache", () => ({
+  revalidatePath: jest.fn(),
+}));
 
 import { createClient } from "@/lib/supabase/server";
 import { requestPasswordReset } from "@/lib/actions/auth";

@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import type { AnimationEvent } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { login } from "@/lib/actions/auth";
 import { useCart } from "@/hooks/use-cart";
@@ -27,7 +26,6 @@ function selectOnAutofill(e: AnimationEvent<HTMLInputElement>) {
 }
 
 export default function LoginForm({ redirectTo }: { redirectTo: string }) {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const emailRef = useRef<HTMLInputElement>(null);
@@ -41,23 +39,33 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
   function handleSubmit(formData: FormData) {
     if (isPending) return;
     setError(null);
+
+    // Sent along so the server action can merge the guest cart into the
+    // account in the same request as the redirect, instead of a separate
+    // client-side call afterward (which raced the navigation — see auth.ts).
+    const { mode, items, clearCart } = useCart.getState();
+    const guestSnapshot = mode === "guest" ? items : [];
+    if (guestSnapshot.length > 0) {
+      formData.set(
+        "guestCart",
+        JSON.stringify(
+          guestSnapshot.map((i) => ({ productId: i.product.id, quantity: i.quantity }))
+        )
+      );
+      // Optimistically clear so a later account-mode sync doesn't merge
+      // these same items in again on top of the server-side merge above.
+      // Restored below if login turns out to have failed.
+      clearCart();
+    }
+
     startTransition(async () => {
+      // login() redirects on success, so reaching this line means it failed.
       const result = await login(formData);
-
-      if (!result.success) {
-        setError(result.error);
-        toast.error(result.error);
-        return;
+      if (guestSnapshot.length > 0) {
+        useCart.setState({ items: guestSnapshot });
       }
-
-      toast.success("로그인되었습니다.");
-      router.push(result.redirectTo);
-      router.refresh();
-      // Deferred: calling this Server Action synchronously alongside
-      // router.push() races with (and can cancel) the pending navigation,
-      // stranding the user on the login page. Firing it next tick lets the
-      // push commit first.
-      setTimeout(() => useCart.getState().syncToAccount(), 0);
+      setError(result.error);
+      toast.error(result.error);
     });
   }
 

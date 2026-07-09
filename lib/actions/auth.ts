@@ -2,6 +2,19 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { mergeGuestCartIntoAccount } from "@/lib/actions/cart";
+
+function parseGuestCart(formData: FormData): { productId: string; quantity: number }[] {
+  const raw = formData.get("guestCart") as string | null;
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed;
+  } catch {
+    return [];
+  }
+}
 
 export async function login(formData: FormData) {
   const email = ((formData.get("email") as string) ?? "").trim();
@@ -19,7 +32,19 @@ export async function login(formData: FormData) {
     return { error: "이메일 또는 비밀번호가 올바르지 않습니다." };
   }
 
-  return { success: true as const, redirectTo };
+  const guestCart = parseGuestCart(formData);
+  if (guestCart.length > 0) {
+    await mergeGuestCartIntoAccount(guestCart);
+  }
+
+  // Redirecting here (rather than returning success and letting the client
+  // call router.push()) delivers the mutation and the navigation in one
+  // round trip. The client-side push()+refresh() pattern was racy in this
+  // Next.js version and would intermittently strand the user on the login
+  // page even though the session had already been established. Merging the
+  // guest cart before this redirect (instead of from a client effect after)
+  // means it can't race the navigation either.
+  redirect(redirectTo);
 }
 
 export async function signup(formData: FormData) {
@@ -48,8 +73,17 @@ export async function signup(formData: FormData) {
 
   // Supabase 프로젝트에서 이메일 인증이 켜져 있으면 signUp()이 세션 없이
   // 사용자만 생성한다 — 이 경우 곧바로 로그인된 상태가 아니므로 클라이언트가
-  // 구분해서 안내할 수 있도록 알려준다.
-  return { success: true as const, redirectTo, hasSession: !!data.session };
+  // 구분해서 안내할 수 있도록 알려준다. 세션이 바로 생기는 경우엔 login()과
+  // 동일하게 서버에서 곧장 redirect한다 (단일 요청으로 처리되어 더 안정적).
+  if (data.session) {
+    const guestCart = parseGuestCart(formData);
+    if (guestCart.length > 0) {
+      await mergeGuestCartIntoAccount(guestCart);
+    }
+    redirect(redirectTo);
+  }
+
+  return { success: true as const, redirectTo, hasSession: false as const };
 }
 
 export async function logout() {

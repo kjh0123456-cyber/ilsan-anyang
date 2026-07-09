@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CheckCircle } from "lucide-react";
 import { signup } from "@/lib/actions/auth";
@@ -11,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function SignupForm({ redirectTo }: { redirectTo: string }) {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -19,27 +17,41 @@ export default function SignupForm({ redirectTo }: { redirectTo: string }) {
   function handleSubmit(formData: FormData) {
     if (isPending) return;
     setError(null);
+
+    // Sent along so the server action can merge the guest cart into the
+    // account in the same request as the redirect, instead of a separate
+    // client-side call afterward (which raced the navigation — see auth.ts).
+    const { mode, items, clearCart } = useCart.getState();
+    const guestSnapshot = mode === "guest" ? items : [];
+    if (guestSnapshot.length > 0) {
+      formData.set(
+        "guestCart",
+        JSON.stringify(
+          guestSnapshot.map((i) => ({ productId: i.product.id, quantity: i.quantity }))
+        )
+      );
+      // Optimistically clear so a later account-mode sync doesn't merge
+      // these same items in again on top of the server-side merge above.
+      // Restored below if signup didn't end up redirecting (error, or
+      // needs-confirmation with no session yet).
+      clearCart();
+    }
+
     startTransition(async () => {
+      // signup() redirects when it creates a session immediately, so
+      // reaching this line means either an error or needs-confirmation.
       const result = await signup(formData);
 
       if (!result.success) {
+        if (guestSnapshot.length > 0) useCart.setState({ items: guestSnapshot });
         setError(result.error);
         toast.error(result.error);
         return;
       }
 
-      if (result.hasSession) {
-        toast.success("회원가입이 완료되었습니다.");
-        router.push(result.redirectTo);
-        router.refresh();
-        // Deferred: see login-form.tsx — calling this Server Action
-        // synchronously alongside router.push() races with (and can
-        // cancel) the pending navigation.
-        setTimeout(() => useCart.getState().syncToAccount(), 0);
-      } else {
-        setNeedsConfirmation(true);
-        toast.success("가입 신청이 완료되었습니다.");
-      }
+      if (guestSnapshot.length > 0) useCart.setState({ items: guestSnapshot });
+      setNeedsConfirmation(true);
+      toast.success("가입 신청이 완료되었습니다.");
     });
   }
 

@@ -1,9 +1,21 @@
 jest.mock("../lib/supabase/server", () => ({
   createClient: jest.fn(),
 }));
+jest.mock("next/cache", () => ({
+  revalidatePath: jest.fn(),
+}));
+jest.mock("next/navigation", () => ({
+  redirect: jest.fn((url: string) => {
+    throw new Error(`REDIRECT:${url}`);
+  }),
+}));
+jest.mock("../lib/actions/cart", () => ({
+  mergeGuestCartIntoAccount: jest.fn(),
+}));
 
 import { createClient } from "@/lib/supabase/server";
 import { login } from "@/lib/actions/auth";
+import { mergeGuestCartIntoAccount } from "@/lib/actions/cart";
 
 function mockSupabase(result: { error: unknown }) {
   const signInWithPassword = jest.fn().mockResolvedValue(result);
@@ -49,21 +61,38 @@ describe("login", () => {
     });
   });
 
-  it("인증에 성공하면 redirect 파라미터로 이동할 성공 결과를 반환한다", async () => {
+  it("인증에 성공하면 redirect 파라미터로 이동한다", async () => {
     const signInWithPassword = mockSupabase({ error: null });
 
-    const result = await login(buildFormData());
+    await expect(login(buildFormData())).rejects.toThrow("REDIRECT:/admin");
 
     expect(signInWithPassword).toHaveBeenCalledWith({
       email: "buyer@test.com",
       password: "password1",
     });
-    expect(result).toEqual({ success: true, redirectTo: "/admin" });
   });
 
   it("redirect 파라미터가 없으면 기본값 '/'로 이동한다", async () => {
     mockSupabase({ error: null });
-    const result = await login(buildFormData({ redirect: "" }));
-    expect(result).toEqual({ success: true, redirectTo: "/" });
+    await expect(login(buildFormData({ redirect: "" }))).rejects.toThrow(
+      "REDIRECT:/"
+    );
+  });
+
+  it("guestCart가 있으면 리다이렉트 전에 계정 장바구니에 병합한다", async () => {
+    mockSupabase({ error: null });
+    const guestCart = [{ productId: "p1", quantity: 2 }];
+
+    await expect(
+      login(buildFormData({ guestCart: JSON.stringify(guestCart) }))
+    ).rejects.toThrow("REDIRECT:/admin");
+
+    expect(mergeGuestCartIntoAccount).toHaveBeenCalledWith(guestCart);
+  });
+
+  it("guestCart가 없으면 병합을 호출하지 않는다", async () => {
+    mockSupabase({ error: null });
+    await expect(login(buildFormData())).rejects.toThrow("REDIRECT:/admin");
+    expect(mergeGuestCartIntoAccount).not.toHaveBeenCalled();
   });
 });
