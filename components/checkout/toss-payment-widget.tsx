@@ -85,7 +85,7 @@ export default function TossPaymentWidget({
         disabled={!ready}
         pendingLabel="결제창 여는 중..."
         errorMessage="결제 요청 중 오류가 발생했습니다."
-        className="w-full bg-navy hover:bg-navy-light text-white h-12 text-sm"
+        className="w-full bg-gold hover:bg-gold-light text-white h-12 text-sm"
       >
         {ready ? `${formatPrice(amount)} 결제하기` : "결제 준비 중..."}
       </AsyncButton>

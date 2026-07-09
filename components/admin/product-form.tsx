@@ -295,7 +295,7 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
           <Button
             type="submit"
             disabled={busy}
-            className="bg-navy hover:bg-navy-light text-white"
+            className="bg-gold hover:bg-gold-light text-white"
           >
             {isPending ? pendingLabel : success ? successMessage : submitLabel}
           </Button>
@@ -364,7 +364,7 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
             <Button
               type="button"
               onClick={handleConfirm}
-              className="bg-navy hover:bg-navy-light text-white"
+              className="bg-gold hover:bg-gold-light text-white"
             >
               확인 및 등록
             </Button>

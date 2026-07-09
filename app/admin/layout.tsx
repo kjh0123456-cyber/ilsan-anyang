@@ -19,7 +19,7 @@ export default async function AdminLayout({
 
   return (
     <div className="flex min-h-screen">
-      <aside className="w-48 bg-navy text-white p-4 space-y-2 shrink-0">
+      <aside className="w-48 bg-gold/5 border-r border-gold/15 p-4 space-y-2 shrink-0">
         <p className="text-gold font-bold mb-4 text-sm">관리자</p>
         {[
           { href: "/admin", label: "대시보드" },
@@ -29,7 +29,7 @@ export default async function AdminLayout({
           <Link
             key={nav.href}
             href={nav.href}
-            className="block text-sm text-gray-300 hover:text-white py-1"
+            className="block text-sm text-navy/70 hover:text-navy py-1"
           >
             {nav.label}
           </Link>

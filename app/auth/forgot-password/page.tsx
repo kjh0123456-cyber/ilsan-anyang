@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
               </div>
               <Button
                 type="submit"
-                className="w-full bg-navy hover:bg-navy-light text-white"
+                className="w-full bg-gold hover:bg-gold-light text-white"
               >
                 재설정 링크 보내기
               </Button>

@@ -5,6 +5,7 @@ import type { AnimationEvent } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { login } from "@/lib/actions/auth";
+import { useCart } from "@/hooks/use-cart";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -52,6 +53,11 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
       toast.success("로그인되었습니다.");
       router.push(result.redirectTo);
       router.refresh();
+      // Deferred: calling this Server Action synchronously alongside
+      // router.push() races with (and can cancel) the pending navigation,
+      // stranding the user on the login page. Firing it next tick lets the
+      // push commit first.
+      setTimeout(() => useCart.getState().syncToAccount(), 0);
     });
   }
 
@@ -96,7 +102,7 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
       <Button
         type="submit"
         disabled={isPending}
-        className="w-full bg-navy hover:bg-navy-light text-white"
+        className="w-full bg-gold hover:bg-gold-light text-white"
       >
         {isPending ? "로그인 중..." : "로그인"}
       </Button>

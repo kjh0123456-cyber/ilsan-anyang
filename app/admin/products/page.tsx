@@ -36,7 +36,7 @@ export default async function AdminProductsPage({
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-xl font-bold text-navy">상품 관리</h1>
         <Link href="/admin/products/new">
-          <Button className="bg-navy hover:bg-navy-light text-white">
+          <Button className="bg-gold hover:bg-gold-light text-white">
             상품 등록
           </Button>
         </Link>

@@ -26,15 +26,15 @@ export default async function HomePage() {
   return (
     <>
       {/* 히어로 */}
-      <section className="bg-navy text-white py-28 px-4">
+      <section className="bg-gradient-to-br from-gold/12 via-background to-background py-28 px-4">
         <div className="max-w-7xl mx-auto">
           <p className="text-gold font-medium mb-2">Premium Smart Home</p>
-          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4 text-navy">
             가까운 일상,
             <br />
             스마트한 선택
           </h1>
-          <p className="text-gray-300 text-sm mb-8 max-w-md">
+          <p className="text-muted-foreground text-sm mb-8 max-w-md">
             일산안양이 제안하는 프리미엄 스마트홈 가전으로
             <br />
             더 편리하고 지능적인 생활을 경험하세요.
@@ -103,7 +103,7 @@ export default async function HomePage() {
       )}
 
       {/* 브랜드 강점 */}
-      <section className="py-20 px-4 bg-navy text-white">
+      <section className="py-20 px-4 bg-gold/5 border-y border-gold/15">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
           {[
             { title: "무료 배송", desc: "5만원 이상 구매 시\n전국 무료 배송" },
@@ -112,7 +112,7 @@ export default async function HomePage() {
           ].map((item) => (
             <div key={item.title}>
               <h3 className="text-gold font-bold text-xl mb-2">{item.title}</h3>
-              <p className="text-gray-400 text-sm whitespace-pre-line">
+              <p className="text-muted-foreground text-sm whitespace-pre-line">
                 {item.desc}
               </p>
             </div>

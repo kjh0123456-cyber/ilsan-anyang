@@ -63,11 +63,16 @@ export default async function Header() {
               </Button>
             </Link>
             {user ? (
-              <form action={logout}>
-                <Button variant="ghost" size="sm" type="submit">
-                  로그아웃
-                </Button>
-              </form>
+              <>
+                <span className="hidden sm:block text-sm text-muted-foreground max-w-40 truncate">
+                  {user.email}
+                </span>
+                <form action={logout}>
+                  <Button variant="ghost" size="sm" type="submit">
+                    로그아웃
+                  </Button>
+                </form>
+              </>
             ) : (
               <Link href="/auth/login">
                 <Button variant="ghost" size="icon" aria-label="로그인">

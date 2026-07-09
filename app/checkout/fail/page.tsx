@@ -34,7 +34,7 @@ function CheckoutFailContent() {
         <h1 className="text-xl font-bold text-navy">결제에 실패했습니다</h1>
         <p className="text-muted-foreground">{message}</p>
         <Link href="/cart">
-          <Button className="bg-navy hover:bg-navy-light text-white">
+          <Button className="bg-gold hover:bg-gold-light text-white">
             장바구니로 돌아가기
           </Button>
         </Link>

@@ -34,7 +34,7 @@ export default function CartSummary() {
         <span>{formatPrice(total + SHIPPING)}</span>
       </div>
       <Link href="/checkout">
-        <Button className="w-full bg-navy hover:bg-navy-light text-white h-12">
+        <Button className="w-full bg-gold hover:bg-gold-light text-white h-12">
           구매하기
         </Button>
       </Link>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CheckCircle } from "lucide-react";
 import { signup } from "@/lib/actions/auth";
+import { useCart } from "@/hooks/use-cart";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,6 +32,10 @@ export default function SignupForm({ redirectTo }: { redirectTo: string }) {
         toast.success("회원가입이 완료되었습니다.");
         router.push(result.redirectTo);
         router.refresh();
+        // Deferred: see login-form.tsx — calling this Server Action
+        // synchronously alongside router.push() races with (and can
+        // cancel) the pending navigation.
+        setTimeout(() => useCart.getState().syncToAccount(), 0);
       } else {
         setNeedsConfirmation(true);
         toast.success("가입 신청이 완료되었습니다.");
@@ -86,7 +91,7 @@ export default function SignupForm({ redirectTo }: { redirectTo: string }) {
       <Button
         type="submit"
         disabled={isPending}
-        className="w-full bg-navy hover:bg-navy-light text-white"
+        className="w-full bg-gold hover:bg-gold-light text-white"
       >
         {isPending ? "가입 처리 중..." : "가입하기"}
       </Button>

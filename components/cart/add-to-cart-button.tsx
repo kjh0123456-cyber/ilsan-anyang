@@ -15,7 +15,7 @@ export default function AddToCartButton({ product }: { product: Product }) {
       }}
       successMessage={`${product.name}이(가) 장바구니에 담겼습니다.`}
       pendingLabel="담는 중..."
-      className="flex-1 bg-navy hover:bg-navy-light text-white h-12 text-sm"
+      className="flex-1 bg-gold hover:bg-gold-light text-white h-12 text-sm"
     >
       <ShoppingCart className="mr-2 h-5 w-5" /> 장바구니 담기
     </AsyncButton>

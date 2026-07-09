@@ -21,7 +21,7 @@ export default function CartPage() {
           마음에 드는 상품을 담아보세요
         </p>
         <Link href="/products">
-          <Button className="bg-navy hover:bg-navy-light text-white">
+          <Button className="bg-gold hover:bg-gold-light text-white">
             쇼핑 계속하기
           </Button>
         </Link>

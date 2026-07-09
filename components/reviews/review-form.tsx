@@ -48,7 +48,7 @@ export default function ReviewForm({ productId }: { productId: string }) {
         className="w-full border rounded-lg p-2 text-sm resize-none"
         required
       />
-      <Button type="submit" size="sm" className="bg-navy hover:bg-navy-light text-white">
+      <Button type="submit" size="sm" className="bg-gold hover:bg-gold-light text-white">
         등록
       </Button>
     </form>

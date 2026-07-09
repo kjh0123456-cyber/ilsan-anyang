@@ -93,7 +93,7 @@ function CheckoutSuccessContent() {
           <h1 className="text-xl font-bold text-navy">결제 확인에 실패했습니다</h1>
           <p className="text-muted-foreground">{errorMessage}</p>
           <Link href="/cart">
-            <Button className="bg-navy hover:bg-navy-light text-white">
+            <Button className="bg-gold hover:bg-gold-light text-white">
               장바구니로 돌아가기
             </Button>
           </Link>
@@ -115,7 +115,7 @@ function CheckoutSuccessContent() {
             <Button variant="outline">주문 내역 보기</Button>
           </Link>
           <Link href="/">
-            <Button className="bg-navy hover:bg-navy-light text-white">
+            <Button className="bg-gold hover:bg-gold-light text-white">
               쇼핑 계속하기
             </Button>
           </Link>

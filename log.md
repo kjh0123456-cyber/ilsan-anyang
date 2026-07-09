@@ -144,3 +144,12 @@
 - 2026-07-09 17:35:51 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\repro-buynow-login.js
 - 2026-07-09 17:37:38 | C:\Users\김종해\claude\ilsan-anyang\components\auth\login-form.tsx
 - 2026-07-09 17:39:02 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-autofill-wiring.js
+- 2026-07-09 17:48:05 | C:\Users\김종해\claude\ilsan-anyang\components\layout\footer.tsx
+- 2026-07-09 17:51:16 | C:\Users\김종해\claude\ilsan-anyang\supabase\migrations\004_cart_items.sql
+- 2026-07-09 17:55:04 | C:\Users\김종해\claude\ilsan-anyang\lib\actions\cart.ts
+- 2026-07-09 17:55:31 | C:\Users\김종해\claude\ilsan-anyang\hooks\use-cart.ts
+- 2026-07-09 17:55:54 | C:\Users\김종해\claude\ilsan-anyang\components\cart\cart-auth-sync.tsx
+- 2026-07-09 17:57:27 | C:\Users\김종해\claude\ilsan-anyang\__tests__\cart.test.ts
+- 2026-07-09 17:58:26 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\screenshot-theme.js
+- 2026-07-09 18:02:21 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-cart-header.js
+- 2026-07-09 18:03:11 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\debug-add-to-cart.js

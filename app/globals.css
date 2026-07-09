@@ -48,11 +48,18 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* Brand colors: one neutral ink tone + one accent, each with a hover tint */
-  --color-navy: #18181B;
-  --color-navy-light: #3F3F46;
-  --color-gold: #2F6F5E;
-  --color-gold-light: #3F8F79;
+  /* Brand colors: one warm ink tone + one vivid accent, each with a lighter
+     tint. Evokes warm ambient home lighting rather than cold tech-black —
+     fitting for a smart-home brand that also sells smart lighting. */
+  --color-navy: #322E28;
+  --color-navy-light: #6B6459;
+  --color-gold: #BD8A2E;
+  --color-gold-light: #D6A548;
+
+  /* Warm the neutral gray-50 swatch used as the page/section backdrop
+     throughout, so the whole site reads as soft ivory instead of clinical
+     white/gray without having to touch every bg-gray-50 usage. */
+  --color-gray-50: #FAF6EE;
 
   /* Font families */
   --font-sans: "Pretendard", system-ui, sans-serif;

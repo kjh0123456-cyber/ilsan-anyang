@@ -43,7 +43,7 @@ export default function ProductFilter() {
             variant={currentCategory === cat.value ? "default" : "outline"}
             size="sm"
             onClick={() => setParam("category", cat.value)}
-            className={currentCategory === cat.value ? "bg-navy text-white" : ""}
+            className={currentCategory === cat.value ? "bg-gold text-white" : ""}
           >
             {cat.label}
           </Button>
@@ -56,7 +56,7 @@ export default function ProductFilter() {
             variant={currentSort === opt.value ? "default" : "outline"}
             size="sm"
             onClick={() => setParam("sort", opt.value)}
-            className={currentSort === opt.value ? "bg-navy text-white" : ""}
+            className={currentSort === opt.value ? "bg-gold text-white" : ""}
           >
             {opt.label}
           </Button>

@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
+import CartAuthSync from "@/components/cart/cart-auth-sync";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -26,6 +27,7 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer />
         <Toaster position="top-center" richColors closeButton />
+        <CartAuthSync />
       </body>
     </html>
   );

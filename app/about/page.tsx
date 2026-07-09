@@ -2,10 +2,10 @@ export default function AboutPage() {
   return (
     <div>
       {/* 히어로 */}
-      <section className="bg-navy text-white py-28 px-4 text-center">
+      <section className="bg-gradient-to-br from-gold/12 via-background to-background py-28 px-4 text-center">
         <div className="max-w-3xl mx-auto">
           <p className="text-gold font-medium mb-2">About Ilsan-Anyang</p>
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-navy">
             기술로 잇는 일상,
             <br />
             경기도에서 시작된 스마트홈
@@ -30,7 +30,7 @@ export default function AboutPage() {
               함께합니다.
             </p>
           </div>
-          <div className="bg-navy rounded-lg p-10 text-white">
+          <div className="bg-gold/5 border border-gold/20 rounded-lg p-10">
             <div className="grid grid-cols-2 gap-8 text-center">
               {[
                 { value: "2026", label: "설립 연도" },
@@ -40,7 +40,7 @@ export default function AboutPage() {
               ].map((stat) => (
                 <div key={stat.label}>
                   <p className="text-xl font-bold text-gold">{stat.value}</p>
-                  <p className="text-sm text-gray-400 mt-1">{stat.label}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{stat.label}</p>
                 </div>
               ))}
             </div>

@@ -79,7 +79,7 @@ export default function ResetPasswordPage() {
           <Button
             type="submit"
             disabled={submitting}
-            className="w-full bg-navy hover:bg-navy-light text-white"
+            className="w-full bg-gold hover:bg-gold-light text-white"
           >
             {submitting ? "변경 중..." : "비밀번호 변경"}
           </Button>
