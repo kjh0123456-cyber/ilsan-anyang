@@ -77,44 +77,6 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
 
       <form action={handleSubmit} className="space-y-4 max-w-xl">
         <div className="space-y-2">
-          <Label htmlFor="name">상품명</Label>
-          <Input id="name" name="name" required defaultValue={product?.name} />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="description">상품 설명</Label>
-          <textarea
-            id="description"
-            name="description"
-            rows={4}
-            defaultValue={product?.description}
-            className="w-full border rounded-lg p-2 text-sm resize-none"
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="price">가격 (원)</Label>
-            <Input
-              id="price"
-              name="price"
-              type="number"
-              min={0}
-              required
-              defaultValue={product?.price}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="stock">재고</Label>
-            <Input
-              id="stock"
-              name="stock"
-              type="number"
-              min={0}
-              required
-              defaultValue={product?.stock}
-            />
-          </div>
-        </div>
-        <div className="space-y-2">
           <Label htmlFor="category">카테고리</Label>
           <select
             id="category"
@@ -134,19 +96,10 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
           </select>
         </div>
 
-        {product && (
-          <div className="space-y-2">
-            <Label className="flex items-center gap-2 font-normal">
-              <input
-                type="checkbox"
-                name="is_active"
-                defaultChecked={product.is_active}
-                className="h-4 w-4"
-              />
-              판매중 (체크 해제 시 목록/상세에서 숨김)
-            </Label>
-          </div>
-        )}
+        <div className="space-y-2">
+          <Label htmlFor="name">상품명</Label>
+          <Input id="name" name="name" required defaultValue={product?.name} />
+        </div>
 
         <div className="space-y-2">
           <Label>상품 이미지</Label>
@@ -182,6 +135,56 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
             JPG, PNG, WEBP, GIF (최대 5MB)
           </p>
         </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="price">가격 (원)</Label>
+            <Input
+              id="price"
+              name="price"
+              type="number"
+              min={0}
+              required
+              defaultValue={product?.price}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="stock">재고</Label>
+            <Input
+              id="stock"
+              name="stock"
+              type="number"
+              min={0}
+              required
+              defaultValue={product?.stock}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="description">상품 설명</Label>
+          <textarea
+            id="description"
+            name="description"
+            rows={4}
+            defaultValue={product?.description}
+            className="w-full border rounded-lg p-2 text-sm resize-none"
+          />
+        </div>
+
+        {product && (
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2 font-normal">
+              <input
+                type="checkbox"
+                name="is_active"
+                defaultChecked={product.is_active}
+                className="h-4 w-4"
+              />
+              판매중 (체크 해제 시 목록/상세에서 숨김)
+            </Label>
+          </div>
+        )}
 
         <Button
           type="submit"

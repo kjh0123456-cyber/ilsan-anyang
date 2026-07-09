@@ -95,3 +95,4 @@
 - 2026-07-09 14:27:56 | C:\Users\김종해\claude\ilsan-anyang\__tests__\create-product.test.ts
 - 2026-07-09 14:29:11 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\test-double-submit.js
 - 2026-07-09 14:33:31 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\test-server-dedup.js
+- 2026-07-09 14:38:59 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-order.js
