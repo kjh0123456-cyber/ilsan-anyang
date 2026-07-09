@@ -20,13 +20,13 @@ export default async function AdminOrdersPage() {
         <div className="space-y-4">
           {orders.map((order) => (
             <div key={order.id} className="bg-white border rounded-lg p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <p className="text-xs text-muted-foreground">
+              <div className="flex flex-wrap justify-between items-start gap-2 mb-4">
+                <div className="min-w-0">
+                  <p className="text-xs text-muted-foreground break-words">
                     {formatDate(order.created_at)} · 주문번호 #
                     {order.id.slice(0, 8)}
                   </p>
-                  <p className="text-sm font-medium text-navy mt-1">
+                  <p className="text-sm font-medium text-navy mt-1 break-all">
                     {order.buyer_email ?? "알 수 없는 사용자"}
                   </p>
                 </div>
@@ -37,19 +37,19 @@ export default async function AdminOrdersPage() {
                 {order.order_items?.map((item) => (
                   <div
                     key={item.id}
-                    className="flex justify-between text-sm text-gray-700"
+                    className="flex justify-between gap-2 text-sm text-gray-700"
                   >
-                    <span>
+                    <span className="min-w-0 truncate">
                       {item.product?.name ?? "상품"} × {item.quantity}
                     </span>
-                    <span>{formatPrice(item.unit_price * item.quantity)}</span>
+                    <span className="shrink-0">{formatPrice(item.unit_price * item.quantity)}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="flex justify-between font-bold text-navy mt-3 pt-3 border-t">
-                <span>합계</span>
-                <span>{formatPrice(order.total_amount)}</span>
+              <div className="flex justify-between gap-2 font-bold text-navy mt-3 pt-3 border-t">
+                <span className="whitespace-nowrap">합계</span>
+                <span className="break-all text-right">{formatPrice(order.total_amount)}</span>
               </div>
             </div>
           ))}

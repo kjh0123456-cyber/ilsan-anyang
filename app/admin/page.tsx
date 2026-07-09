@@ -47,29 +47,29 @@ export default async function AdminDashboard() {
   return (
     <div>
       <h1 className="text-xl font-bold text-navy mb-8">대시보드</h1>
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
         {[
           { label: "전체 상품", value: `${products.length}개` },
           { label: "전체 주문", value: `${orders.length}건` },
           { label: "총 매출", value: formatPrice(totalRevenue) },
         ].map((stat) => (
           <div key={stat.label} className="bg-white rounded-lg p-6 border">
-            <p className="text-sm text-muted-foreground">{stat.label}</p>
-            <p className="text-xl font-bold text-navy mt-1">{stat.value}</p>
+            <p className="text-sm text-muted-foreground whitespace-nowrap">{stat.label}</p>
+            <p className="text-xl font-bold text-navy mt-1 break-all">{stat.value}</p>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-6 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6">
         <div className="bg-white rounded-lg p-6 border">
-          <p className="text-sm text-muted-foreground">오늘 주문</p>
+          <p className="text-sm text-muted-foreground whitespace-nowrap">오늘 주문</p>
           <p className="text-xl font-bold text-navy mt-1">
             {todayOrderCount}건
           </p>
         </div>
         <div className="bg-white rounded-lg p-6 border">
-          <p className="text-sm text-muted-foreground">이번달 매출</p>
-          <p className="text-xl font-bold text-navy mt-1">
+          <p className="text-sm text-muted-foreground whitespace-nowrap">이번달 매출</p>
+          <p className="text-xl font-bold text-navy mt-1 break-all">
             {formatPrice(thisMonthRevenue)}
           </p>
         </div>
@@ -90,15 +90,15 @@ export default async function AdminDashboard() {
             {lowStockProducts.map((product) => (
               <li
                 key={product.id}
-                className="flex items-center justify-between px-6 py-3 text-sm"
+                className="flex items-center justify-between gap-2 px-6 py-3 text-sm"
               >
                 <Link
                   href={`/admin/products/${product.id}/edit`}
-                  className="text-navy hover:underline"
+                  className="text-navy hover:underline min-w-0 truncate"
                 >
                   {product.name}
                 </Link>
-                <span className="text-destructive font-medium">
+                <span className="text-destructive font-medium whitespace-nowrap">
                   재고 {product.stock}개
                 </span>
               </li>
