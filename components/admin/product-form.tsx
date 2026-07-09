@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,21 +23,39 @@ interface ProductFormProps {
 }
 
 export default function ProductForm({ product, submitLabel }: ProductFormProps) {
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [existingImages, setExistingImages] = useState<string[]>(
     product?.images ?? []
   );
 
-  async function handleSubmit(formData: FormData) {
+  const pendingLabel = product ? "수정 중..." : "등록 중...";
+  const successMessage = product
+    ? "상품이 수정되었습니다."
+    : "상품이 등록되었습니다.";
+  const busy = isPending || success;
+
+  function handleSubmit(formData: FormData) {
+    if (busy) return;
     formData.set("existingImages", JSON.stringify(existingImages));
-    setSubmitting(true);
     setError(null);
-    const result = product
-      ? await updateProduct(product.id, formData)
-      : await createProduct(formData);
-    setSubmitting(false);
-    if (result?.error) setError(result.error);
+    startTransition(async () => {
+      const result = product
+        ? await updateProduct(product.id, formData)
+        : await createProduct(formData);
+
+      if (result?.error) {
+        setError(result.error);
+        return;
+      }
+
+      setSuccess(true);
+      setTimeout(() => {
+        router.push("/admin/products");
+      }, 700);
+    });
   }
 
   function removeExistingImage(url: string) {
@@ -48,6 +67,11 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
       {error && (
         <div className="mb-6 p-3 rounded-lg bg-red-50 text-red-700 text-sm max-w-xl">
           {error}
+        </div>
+      )}
+      {success && (
+        <div className="mb-6 p-3 rounded-lg bg-green-50 text-green-700 text-sm max-w-xl">
+          {successMessage}
         </div>
       )}
 
@@ -161,10 +185,10 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
 
         <Button
           type="submit"
-          disabled={submitting}
+          disabled={busy}
           className="bg-navy hover:bg-navy-light text-white"
         >
-          {submitting ? "처리 중..." : submitLabel}
+          {isPending ? pendingLabel : success ? successMessage : submitLabel}
         </Button>
       </form>
     </>

@@ -10,14 +10,9 @@ jest.mock("next/cache", () => ({
   revalidatePath: jest.fn(),
 }));
 
-jest.mock("next/navigation", () => ({
-  redirect: jest.fn(),
-}));
-
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { updateProduct, deleteProduct } from "@/lib/actions/products";
 
 function buildFormData(overrides: Record<string, string> = {}) {
@@ -65,10 +60,10 @@ describe("updateProduct", () => {
     expect(result).toEqual({ error: "가격을 올바르게 입력해주세요." });
   });
 
-  it("기존 이미지를 유지하고 업데이트한 뒤 목록으로 리다이렉트한다", async () => {
+  it("기존 이미지를 유지하고 업데이트한 뒤 성공을 반환한다", async () => {
     const { update } = mockSupabaseUpdate({ error: null });
 
-    await updateProduct("p1", buildFormData());
+    const result = await updateProduct("p1", buildFormData());
 
     expect(update).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -78,7 +73,7 @@ describe("updateProduct", () => {
       })
     );
     expect(revalidatePath).toHaveBeenCalledWith("/admin/products");
-    expect(redirect).toHaveBeenCalledWith("/admin/products");
+    expect(result).toEqual({ success: true });
   });
 
   it("is_active 체크가 해제되면 false로 저장한다", async () => {

@@ -4,10 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Product, Category } from "@/lib/types";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 const CATEGORIES: Category[] = ["vacuum", "air", "speaker", "light", "hub"];
 const IMAGE_BUCKET = "product-images";
+const DUPLICATE_WINDOW_MS = 10_000;
 
 async function uploadProductImages(files: File[]): Promise<string[]> {
   const admin = createAdminClient();
@@ -121,6 +121,25 @@ export async function createProduct(formData: FormData) {
     return { error: "카테고리를 선택해주세요." };
   }
 
+  const supabase = await createClient();
+
+  const { data: recentDuplicate } = await supabase
+    .from("products")
+    .select("id")
+    .eq("name", name)
+    .eq("price", price)
+    .eq("category", category)
+    .gte(
+      "created_at",
+      new Date(Date.now() - DUPLICATE_WINDOW_MS).toISOString()
+    )
+    .limit(1)
+    .maybeSingle();
+
+  if (recentDuplicate) {
+    return { error: "방금 동일한 상품이 등록되었습니다. 중복 등록을 방지했습니다." };
+  }
+
   let images: string[];
   try {
     images = await uploadProductImages(imageFiles);
@@ -128,7 +147,6 @@ export async function createProduct(formData: FormData) {
     return { error: "이미지 업로드에 실패했습니다." };
   }
 
-  const supabase = await createClient();
   const { error } = await supabase.from("products").insert({
     name,
     description,
@@ -141,7 +159,7 @@ export async function createProduct(formData: FormData) {
   if (error) return { error: "상품 등록에 실패했습니다." };
 
   revalidatePath("/admin/products");
-  redirect("/admin/products");
+  return { success: true };
 }
 
 export async function updateProduct(id: string, formData: FormData) {
@@ -192,7 +210,7 @@ export async function updateProduct(id: string, formData: FormData) {
 
   revalidatePath("/admin/products");
   revalidatePath(`/products/${id}`);
-  redirect("/admin/products");
+  return { success: true };
 }
 
 export async function deleteProduct(id: string) {
