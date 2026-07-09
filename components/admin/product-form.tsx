@@ -1,12 +1,22 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { createProduct, updateProduct } from "@/lib/actions/products";
+import { formatPrice } from "@/lib/utils";
 import type { Product } from "@/lib/types";
 
 const CATEGORY_OPTIONS = [
@@ -33,6 +43,7 @@ interface ProductFormProps {
 
 export default function ProductForm({ product, submitLabel }: ProductFormProps) {
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -42,6 +53,10 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
   const [newImagePreviews, setNewImagePreviews] = useState<string[]>([]);
   const [priceDisplay, setPriceDisplay] = useState(
     product?.price != null ? product.price.toLocaleString("ko-KR") : ""
+  );
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState<FormData | null>(
+    null
   );
 
   useEffect(() => {
@@ -56,8 +71,7 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
     : "상품이 등록되었습니다.";
   const busy = isPending || success;
 
-  function handleSubmit(formData: FormData) {
-    if (busy) return;
+  function submitForm(formData: FormData) {
     formData.set("existingImages", JSON.stringify(existingImages));
     formData.set("price", priceDisplay.replace(/,/g, ""));
     setError(null);
@@ -78,6 +92,19 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
     });
   }
 
+  function handleOpenPreview(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (busy) return;
+    setPendingFormData(new FormData(e.currentTarget));
+    setPreviewOpen(true);
+  }
+
+  function handleConfirm() {
+    if (!pendingFormData) return;
+    setPreviewOpen(false);
+    submitForm(pendingFormData);
+  }
+
   function removeExistingImage(url: string) {
     setExistingImages((prev) => prev.filter((img) => img !== url));
   }
@@ -93,6 +120,15 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
     setNewImagePreviews(files.map((file) => URL.createObjectURL(file)));
   }
 
+  const previewImage = existingImages[0] ?? newImagePreviews[0] ?? null;
+  const previewCategoryLabel = CATEGORY_OPTIONS.find(
+    (c) => c.value === pendingFormData?.get("category")
+  )?.label;
+  const previewName = (pendingFormData?.get("name") as string) ?? "";
+  const previewDescription =
+    (pendingFormData?.get("description") as string) ?? "";
+  const previewPrice = Number(priceDisplay.replace(/,/g, "")) || 0;
+
   return (
     <>
       {error && (
@@ -106,7 +142,11 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
         </div>
       )}
 
-      <form action={handleSubmit} className="space-y-4 max-w-xl">
+      <form
+        ref={formRef}
+        onSubmit={handleOpenPreview}
+        className="space-y-4 max-w-xl"
+      >
         <div className="space-y-2">
           <Label htmlFor="category">
             카테고리
@@ -248,14 +288,86 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
           </div>
         )}
 
-        <Button
-          type="submit"
-          disabled={busy}
-          className="bg-navy hover:bg-navy-light text-white"
-        >
-          {isPending ? pendingLabel : success ? successMessage : submitLabel}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            type="submit"
+            disabled={busy}
+            className="bg-navy hover:bg-navy-light text-white"
+          >
+            {isPending ? pendingLabel : success ? successMessage : submitLabel}
+          </Button>
+          <Link href="/admin/products">
+            <Button type="button" variant="outline" disabled={busy}>
+              취소
+            </Button>
+          </Link>
+        </div>
       </form>
+
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>등록 전 미리보기</DialogTitle>
+          </DialogHeader>
+
+          <div className="max-w-xs mx-auto w-full">
+            <div className="bg-white rounded-lg overflow-hidden border border-gray-100">
+              <div className="relative aspect-square bg-gray-50">
+                {previewImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={previewImage}
+                    alt={previewName}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center text-gray-300 text-sm">
+                    이미지 없음
+                  </div>
+                )}
+              </div>
+              <div className="p-5">
+                {previewCategoryLabel && (
+                  <Badge
+                    variant="outline"
+                    className="text-xs mb-2 border-gold text-gold"
+                  >
+                    {previewCategoryLabel}
+                  </Badge>
+                )}
+                <h3 className="font-semibold text-navy text-sm leading-tight mb-1">
+                  {previewName || "(상품명 없음)"}
+                </h3>
+                <p className="text-xl font-bold text-navy mb-2">
+                  {formatPrice(previewPrice)}
+                </p>
+                {previewDescription && (
+                  <p className="text-sm text-gray-600 whitespace-pre-wrap">
+                    {previewDescription}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setPreviewOpen(false)}
+            >
+              수정하기
+            </Button>
+            <Button
+              type="button"
+              onClick={handleConfirm}
+              className="bg-navy hover:bg-navy-light text-white"
+            >
+              확인 및 등록
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

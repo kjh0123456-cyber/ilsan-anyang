@@ -99,3 +99,7 @@
 - 2026-07-09 14:41:52 | C:\Users\김종해\claude\ilsan-anyang\components\admin\product-form.tsx
 - 2026-07-09 14:43:06 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-ux.js
 - 2026-07-09 14:43:39 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-ux-submit.js
+- 2026-07-09 14:49:13 | C:\Users\김종해\claude\ilsan-anyang\components\ui\dialog.tsx
+- 2026-07-09 14:50:16 | C:\Users\김종해\claude\ilsan-anyang\components\admin\product-form.tsx
+- 2026-07-09 14:51:31 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-preview-modal.js
+- 2026-07-09 14:51:59 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-cancel.js
