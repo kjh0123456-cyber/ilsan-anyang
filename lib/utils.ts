@@ -20,6 +20,18 @@ export function formatDate(dateString: string): string {
     .replace(/\.$/, "");
 }
 
+const kstDateFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Seoul",
+});
+
+export function toKstDateString(date: Date): string {
+  return kstDateFormatter.format(date);
+}
+
+export function toKstYearMonth(date: Date): string {
+  return toKstDateString(date).slice(0, 7);
+}
+
 export function validateNewPassword(
   password: string,
   confirmPassword: string

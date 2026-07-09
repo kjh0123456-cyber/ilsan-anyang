@@ -1,4 +1,10 @@
-import { formatPrice, formatDate, validateNewPassword } from "@/lib/utils";
+import {
+  formatPrice,
+  formatDate,
+  validateNewPassword,
+  toKstDateString,
+  toKstYearMonth,
+} from "@/lib/utils";
 
 describe("formatPrice", () => {
   it("1000원을 '1,000원'으로 포맷한다", () => {
@@ -18,6 +24,29 @@ describe("formatDate", () => {
   it("날짜를 'YYYY.MM.DD' 형식으로 포맷한다", () => {
     const result = formatDate("2026-07-06T00:00:00Z");
     expect(result).toMatch(/2026\.07\.0[56]/); // timezone-safe
+  });
+});
+
+describe("toKstDateString", () => {
+  it("UTC 자정 직후 시각을 KST(UTC+9) 날짜로 변환한다", () => {
+    // 2026-07-06 15:30 UTC == 2026-07-07 00:30 KST
+    expect(toKstDateString(new Date("2026-07-06T15:30:00Z"))).toBe(
+      "2026-07-07"
+    );
+  });
+
+  it("KST로도 같은 날이면 그대로 반환한다", () => {
+    // 2026-07-06 01:00 UTC == 2026-07-06 10:00 KST
+    expect(toKstDateString(new Date("2026-07-06T01:00:00Z"))).toBe(
+      "2026-07-06"
+    );
+  });
+});
+
+describe("toKstYearMonth", () => {
+  it("KST 기준 연-월을 반환한다", () => {
+    // 2026-07-31 15:30 UTC == 2026-08-01 00:30 KST
+    expect(toKstYearMonth(new Date("2026-07-31T15:30:00Z"))).toBe("2026-08");
   });
 });
 
