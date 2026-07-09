@@ -2,6 +2,10 @@ jest.mock("../lib/supabase/server", () => ({
   createClient: jest.fn(),
 }));
 
+jest.mock("../lib/supabase/admin", () => ({
+  createAdminClient: jest.fn(),
+}));
+
 jest.mock("next/cache", () => ({
   revalidatePath: jest.fn(),
 }));
@@ -11,6 +15,7 @@ jest.mock("next/navigation", () => ({
 }));
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createProduct } from "@/lib/actions/products";
@@ -22,7 +27,6 @@ function buildFormData(overrides: Record<string, string> = {}) {
     price: "890000",
     stock: "50",
     category: "vacuum",
-    images: "https://example.com/1.jpg",
   };
   const formData = new FormData();
   for (const [key, value] of Object.entries({ ...defaults, ...overrides })) {
@@ -30,6 +34,15 @@ function buildFormData(overrides: Record<string, string> = {}) {
   }
   return formData;
 }
+
+(createAdminClient as jest.Mock).mockReturnValue({
+  storage: {
+    from: jest.fn().mockReturnValue({
+      upload: jest.fn().mockResolvedValue({ error: null }),
+      getPublicUrl: jest.fn().mockReturnValue({ data: { publicUrl: "" } }),
+    }),
+  },
+});
 
 function mockSupabaseInsert(result: { error: unknown }) {
   const insert = jest.fn().mockResolvedValue(result);
@@ -86,7 +99,7 @@ describe("createProduct", () => {
         price: 890000,
         stock: 50,
         category: "vacuum",
-        images: ["https://example.com/1.jpg"],
+        images: [],
       })
     );
     expect(revalidatePath).toHaveBeenCalledWith("/admin/products");

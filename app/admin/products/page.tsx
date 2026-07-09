@@ -3,6 +3,7 @@ import { getAllProducts } from "@/lib/actions/products";
 import { formatPrice } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import DeleteProductButton from "@/components/admin/delete-product-button";
 import type { Product } from "@/lib/types";
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -40,12 +41,13 @@ export default async function AdminProductsPage() {
               <th className="text-right p-3">가격</th>
               <th className="text-right p-3">재고</th>
               <th className="text-center p-3">상태</th>
+              <th className="text-right p-3">관리</th>
             </tr>
           </thead>
           <tbody className="divide-y">
             {products.length === 0 ? (
               <tr>
-                <td colSpan={5} className="p-8 text-center text-muted-foreground">
+                <td colSpan={6} className="p-8 text-center text-muted-foreground">
                   상품이 없습니다. Supabase를 설정하고 샘플 데이터를 추가해주세요.
                 </td>
               </tr>
@@ -55,13 +57,33 @@ export default async function AdminProductsPage() {
                   <td className="p-3 font-medium">{product.name}</td>
                   <td className="p-3">{CATEGORY_LABELS[product.category]}</td>
                   <td className="p-3 text-right">{formatPrice(product.price)}</td>
-                  <td className="p-3 text-right">{product.stock}개</td>
+                  <td className="p-3 text-right">
+                    {product.stock}개
+                    {product.stock === 0 && (
+                      <Badge variant="destructive" className="ml-2">
+                        품절
+                      </Badge>
+                    )}
+                  </td>
                   <td className="p-3 text-center">
                     <Badge
                       variant={product.is_active ? "default" : "secondary"}
                     >
                       {product.is_active ? "판매중" : "중단"}
                     </Badge>
+                  </td>
+                  <td className="p-3">
+                    <div className="flex justify-end gap-2">
+                      <Link href={`/admin/products/${product.id}/edit`}>
+                        <Button type="button" variant="outline" size="sm">
+                          수정
+                        </Button>
+                      </Link>
+                      <DeleteProductButton
+                        productId={product.id}
+                        productName={product.name}
+                      />
+                    </div>
                   </td>
                 </tr>
               ))

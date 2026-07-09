@@ -80,3 +80,9 @@
 - 2026-07-09 13:08:47 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\login-and-check.js
 - 2026-07-09 13:10:34 | C:\Users\김종해\claude\ilsan-anyang\supabase\migrations\002_admin_users_select_policy.sql
 - 2026-07-09 13:17:47 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\screenshot-header.js
+- 2026-07-09 13:31:55 | C:\Users\김종해\claude\ilsan-anyang\lib\supabase\admin.ts
+- 2026-07-09 13:32:47 | C:\Users\김종해\claude\ilsan-anyang\components\admin\product-form.tsx
+- 2026-07-09 13:32:57 | C:\Users\김종해\claude\ilsan-anyang\components\admin\delete-product-button.tsx
+- 2026-07-09 13:33:09 | C:\Users\김종해\claude\ilsan-anyang\app\admin\products\new\page.tsx
+- 2026-07-09 13:33:25 | C:\Users\김종해\claude\ilsan-anyang\app\admin\products\[id]\edit\page.tsx
+- 2026-07-09 13:35:08 | C:\Users\김종해\claude\ilsan-anyang\__tests__\update-delete-product.test.ts
