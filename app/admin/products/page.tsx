@@ -33,10 +33,10 @@ export default async function AdminProductsPage({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold text-navy">상품 관리</h1>
+      <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+        <h1 className="text-xl font-bold text-navy whitespace-nowrap">상품 관리</h1>
         <Link href="/admin/products/new">
-          <Button className="bg-gold hover:bg-gold-light text-white">
+          <Button className="bg-gold hover:bg-gold-light text-white whitespace-nowrap">
             상품 등록
           </Button>
         </Link>
@@ -44,16 +44,16 @@ export default async function AdminProductsPage({
       <div className="mb-4">
         <ShowDeletedToggle checked={showDeleted} />
       </div>
-      <div className="bg-white rounded-lg border overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="bg-white rounded-lg border overflow-x-auto">
+        <table className="w-full min-w-[720px] text-sm">
           <thead className="bg-gray-50 text-muted-foreground">
             <tr>
-              <th className="text-left p-3">상품명</th>
-              <th className="text-left p-3">카테고리</th>
-              <th className="text-right p-3">가격</th>
-              <th className="text-right p-3">재고</th>
-              <th className="text-center p-3">상태</th>
-              <th className="text-right p-3">관리</th>
+              <th className="text-left p-3 whitespace-nowrap">상품명</th>
+              <th className="text-left p-3 whitespace-nowrap">카테고리</th>
+              <th className="text-right p-3 whitespace-nowrap">가격</th>
+              <th className="text-right p-3 whitespace-nowrap">재고</th>
+              <th className="text-center p-3 whitespace-nowrap">상태</th>
+              <th className="text-right p-3 whitespace-nowrap">관리</th>
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -75,10 +75,10 @@ export default async function AdminProductsPage({
                       isDeleted ? "bg-gray-50/60 text-muted-foreground" : "hover:bg-gray-50"
                     }
                   >
-                    <td className="p-3 font-medium">{product.name}</td>
-                    <td className="p-3">{CATEGORY_LABELS[product.category]}</td>
-                    <td className="p-3 text-right">{formatPrice(product.price)}</td>
-                    <td className="p-3 text-right">
+                    <td className="p-3 font-medium whitespace-nowrap">{product.name}</td>
+                    <td className="p-3 whitespace-nowrap">{CATEGORY_LABELS[product.category]}</td>
+                    <td className="p-3 text-right whitespace-nowrap">{formatPrice(product.price)}</td>
+                    <td className="p-3 text-right whitespace-nowrap">
                       {product.stock}개
                       {!isDeleted && product.stock === 0 && (
                         <Badge variant="destructive" className="ml-2">
@@ -86,7 +86,7 @@ export default async function AdminProductsPage({
                         </Badge>
                       )}
                     </td>
-                    <td className="p-3 text-center">
+                    <td className="p-3 text-center whitespace-nowrap">
                       {isDeleted ? (
                         <Badge variant="destructive">삭제됨</Badge>
                       ) : (
@@ -95,7 +95,7 @@ export default async function AdminProductsPage({
                         </Badge>
                       )}
                     </td>
-                    <td className="p-3">
+                    <td className="p-3 whitespace-nowrap">
                       <div className="flex justify-end gap-2">
                         {isDeleted ? (
                           <RestoreProductButton
