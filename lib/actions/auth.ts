@@ -1,8 +1,6 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { sendPasswordResetEmail } from "@/lib/email";
 import { redirect } from "next/navigation";
 
 export async function login(formData: FormData) {
@@ -56,26 +54,12 @@ export async function requestPasswordReset(formData: FormData) {
   const email = ((formData.get("email") as string) ?? "").trim();
   if (!email) return { error: "이메일을 입력해주세요." };
 
-  const admin = createAdminClient();
-  const { data, error } = await admin.auth.admin.generateLink({
-    type: "recovery",
-    email,
-    options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/reset-password`,
-    },
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/reset-password`,
   });
 
-  // 존재하지 않는 이메일이어도 성공으로 응답해 이메일 존재 여부가 노출되지 않도록 한다.
-  if (error) {
-    if (error.code === "user_not_found") return { success: true };
-    return { error: "재설정 링크 발송에 실패했습니다." };
-  }
-
-  try {
-    await sendPasswordResetEmail(email, data.properties.action_link);
-  } catch {
-    return { error: "재설정 링크 발송에 실패했습니다." };
-  }
+  if (error) return { error: "재설정 링크 발송에 실패했습니다." };
 
   return { success: true };
 }
