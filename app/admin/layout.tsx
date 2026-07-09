@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isAdmin } from "@/lib/actions/auth";
-import Link from "next/link";
+import AdminSidebar from "@/components/admin/admin-sidebar";
 
 export default async function AdminLayout({
   children,
@@ -18,23 +18,8 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="flex min-h-screen">
-      <aside className="w-48 bg-gold/5 border-r border-gold/15 p-4 space-y-2 shrink-0">
-        <p className="text-gold font-bold mb-4 text-sm">관리자</p>
-        {[
-          { href: "/admin", label: "대시보드" },
-          { href: "/admin/products", label: "상품 관리" },
-          { href: "/admin/orders", label: "주문 관리" },
-        ].map((nav) => (
-          <Link
-            key={nav.href}
-            href={nav.href}
-            className="block text-sm text-navy/70 hover:text-navy py-1"
-          >
-            {nav.label}
-          </Link>
-        ))}
-      </aside>
+    <div className="flex flex-col lg:flex-row min-h-screen">
+      <AdminSidebar />
       <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-10">{children}</main>
     </div>
   );
