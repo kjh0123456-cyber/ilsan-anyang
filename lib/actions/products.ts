@@ -79,13 +79,20 @@ export async function getProductById(id: string): Promise<Product | null> {
   return data as Product;
 }
 
-export async function getAllProducts(): Promise<Product[]> {
+export async function getAllProducts(
+  includeDeleted = false
+): Promise<Product[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase
+  let query = supabase
     .from("products")
     .select("*")
     .order("created_at", { ascending: false });
 
+  if (!includeDeleted) {
+    query = query.is("deleted_at", null);
+  }
+
+  const { data, error } = await query;
   if (error) throw error;
   return data as Product[];
 }
@@ -217,10 +224,24 @@ export async function deleteProduct(id: string) {
   const supabase = await createClient();
   const { error } = await supabase
     .from("products")
-    .update({ is_active: false })
+    .update({ deleted_at: new Date().toISOString(), is_active: false })
     .eq("id", id);
 
   if (error) return { error: "상품 삭제에 실패했습니다." };
+
+  revalidatePath("/admin/products");
+  revalidatePath(`/products/${id}`);
+  return { success: true };
+}
+
+export async function restoreProduct(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("products")
+    .update({ deleted_at: null, is_active: true })
+    .eq("id", id);
+
+  if (error) return { error: "상품 복구에 실패했습니다." };
 
   revalidatePath("/admin/products");
   revalidatePath(`/products/${id}`);

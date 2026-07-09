@@ -107,3 +107,9 @@
 - 2026-07-09 15:03:00 | C:\Users\김종해\claude\ilsan-anyang\app\auth\login\page.tsx
 - 2026-07-09 15:03:47 | C:\Users\김종해\claude\ilsan-anyang\__tests__\login.test.ts
 - 2026-07-09 15:04:51 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-login.js
+- 2026-07-09 15:09:58 | C:\Users\김종해\claude\ilsan-anyang\supabase\migrations\003_products_deleted_at.sql
+- 2026-07-09 15:10:49 | C:\Users\김종해\claude\ilsan-anyang\components\admin\restore-product-button.tsx
+- 2026-07-09 15:10:55 | C:\Users\김종해\claude\ilsan-anyang\components\admin\show-deleted-toggle.tsx
+- 2026-07-09 15:11:14 | C:\Users\김종해\claude\ilsan-anyang\app\admin\products\page.tsx
+- 2026-07-09 15:12:40 | C:\Users\김종해\claude\ilsan-anyang\__tests__\get-all-products.test.ts
+- 2026-07-09 15:22:27 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-soft-delete.js

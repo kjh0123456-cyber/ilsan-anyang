@@ -2,9 +2,9 @@
 
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import { deleteProduct } from "@/lib/actions/products";
+import { restoreProduct } from "@/lib/actions/products";
 
-export default function DeleteProductButton({
+export default function RestoreProductButton({
   productId,
   productName,
 }: {
@@ -14,11 +14,12 @@ export default function DeleteProductButton({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  function handleDelete() {
-    if (!confirm(`'${productName}' 상품을 삭제하시겠습니까? ('삭제된 상품 보기'에서 복구할 수 있습니다.)`)) return;
+  function handleRestore() {
+    if (!confirm(`'${productName}' 상품을 복구해서 다시 판매중으로 되돌리시겠습니까?`))
+      return;
     setError(null);
     startTransition(async () => {
-      const result = await deleteProduct(productId);
+      const result = await restoreProduct(productId);
       if (result?.error) setError(result.error);
     });
   }
@@ -27,12 +28,12 @@ export default function DeleteProductButton({
     <div className="flex flex-col items-end gap-1">
       <Button
         type="button"
-        variant="destructive"
+        variant="outline"
         size="sm"
         disabled={isPending}
-        onClick={handleDelete}
+        onClick={handleRestore}
       >
-        {isPending ? "삭제 중..." : "삭제"}
+        {isPending ? "복구 중..." : "복구"}
       </Button>
       {error && <p className="text-xs text-destructive">{error}</p>}
     </div>

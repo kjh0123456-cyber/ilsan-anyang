@@ -13,7 +13,11 @@ jest.mock("next/cache", () => ({
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
-import { updateProduct, deleteProduct } from "@/lib/actions/products";
+import {
+  updateProduct,
+  deleteProduct,
+  restoreProduct,
+} from "@/lib/actions/products";
 
 function buildFormData(overrides: Record<string, string> = {}) {
   const defaults: Record<string, string> = {
@@ -94,12 +98,16 @@ describe("updateProduct", () => {
 });
 
 describe("deleteProduct", () => {
-  it("is_active를 false로 바꾸는 소프트 삭제를 수행한다", async () => {
+  it("deleted_at을 채우고 is_active를 false로 바꾸는 소프트 삭제를 수행한다", async () => {
     const { update, eq } = mockSupabaseUpdate({ error: null });
 
     const result = await deleteProduct("p1");
 
-    expect(update).toHaveBeenCalledWith({ is_active: false });
+    expect(update).toHaveBeenCalledWith(
+      expect.objectContaining({ is_active: false })
+    );
+    const updateArg = update.mock.calls[0][0];
+    expect(typeof updateArg.deleted_at).toBe("string");
     expect(eq).toHaveBeenCalledWith("id", "p1");
     expect(result).toEqual({ success: true });
     expect(revalidatePath).toHaveBeenCalledWith("/admin/products");
@@ -109,5 +117,24 @@ describe("deleteProduct", () => {
     mockSupabaseUpdate({ error: { message: "db error" } });
     const result = await deleteProduct("p1");
     expect(result).toEqual({ error: "상품 삭제에 실패했습니다." });
+  });
+});
+
+describe("restoreProduct", () => {
+  it("deleted_at을 null로, is_active를 true로 되돌린다", async () => {
+    const { update, eq } = mockSupabaseUpdate({ error: null });
+
+    const result = await restoreProduct("p1");
+
+    expect(update).toHaveBeenCalledWith({ deleted_at: null, is_active: true });
+    expect(eq).toHaveBeenCalledWith("id", "p1");
+    expect(result).toEqual({ success: true });
+    expect(revalidatePath).toHaveBeenCalledWith("/admin/products");
+  });
+
+  it("실패하면 에러를 반환한다", async () => {
+    mockSupabaseUpdate({ error: { message: "db error" } });
+    const result = await restoreProduct("p1");
+    expect(result).toEqual({ error: "상품 복구에 실패했습니다." });
   });
 });

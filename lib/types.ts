@@ -12,6 +12,7 @@ export interface Product {
   specs: Record<string, string>;
   is_active: boolean;
   created_at: string;
+  deleted_at: string | null;
 }
 
 export interface Order {

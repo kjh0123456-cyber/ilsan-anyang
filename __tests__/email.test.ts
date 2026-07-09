@@ -34,6 +34,7 @@ const mockItems: CartItem[] = [
       specs: {},
       is_active: true,
       created_at: "2026-01-01T00:00:00Z",
+      deleted_at: null,
     },
     quantity: 2,
   },
