@@ -27,7 +27,11 @@ export default async function Header() {
             </span>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-6 shrink-0">
+          <nav
+            className={`hidden items-center gap-6 shrink-0 ${
+              admin ? "xl:flex" : "lg:flex"
+            }`}
+          >
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
