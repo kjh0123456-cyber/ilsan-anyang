@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,15 @@ const CATEGORY_OPTIONS = [
   { value: "hub", label: "IoT 허브" },
 ];
 
+function RequiredMark() {
+  return <span className="text-red-500 ml-0.5">*</span>;
+}
+
+function formatPriceInput(digitsOnly: string): string {
+  if (!digitsOnly) return "";
+  return Number(digitsOnly).toLocaleString("ko-KR");
+}
+
 interface ProductFormProps {
   product?: Product;
   submitLabel: string;
@@ -30,6 +39,16 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
   const [existingImages, setExistingImages] = useState<string[]>(
     product?.images ?? []
   );
+  const [newImagePreviews, setNewImagePreviews] = useState<string[]>([]);
+  const [priceDisplay, setPriceDisplay] = useState(
+    product?.price != null ? product.price.toLocaleString("ko-KR") : ""
+  );
+
+  useEffect(() => {
+    return () => {
+      newImagePreviews.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [newImagePreviews]);
 
   const pendingLabel = product ? "수정 중..." : "등록 중...";
   const successMessage = product
@@ -40,6 +59,7 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
   function handleSubmit(formData: FormData) {
     if (busy) return;
     formData.set("existingImages", JSON.stringify(existingImages));
+    formData.set("price", priceDisplay.replace(/,/g, ""));
     setError(null);
     startTransition(async () => {
       const result = product
@@ -62,6 +82,17 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
     setExistingImages((prev) => prev.filter((img) => img !== url));
   }
 
+  function handlePriceChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const digitsOnly = e.target.value.replace(/[^0-9]/g, "");
+    setPriceDisplay(formatPriceInput(digitsOnly));
+  }
+
+  function handleImagesChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    newImagePreviews.forEach((url) => URL.revokeObjectURL(url));
+    setNewImagePreviews(files.map((file) => URL.createObjectURL(file)));
+  }
+
   return (
     <>
       {error && (
@@ -77,7 +108,10 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
 
       <form action={handleSubmit} className="space-y-4 max-w-xl">
         <div className="space-y-2">
-          <Label htmlFor="category">카테고리</Label>
+          <Label htmlFor="category">
+            카테고리
+            <RequiredMark />
+          </Label>
           <select
             id="category"
             name="category"
@@ -97,13 +131,16 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="name">상품명</Label>
+          <Label htmlFor="name">
+            상품명
+            <RequiredMark />
+          </Label>
           <Input id="name" name="name" required defaultValue={product?.name} />
         </div>
 
         <div className="space-y-2">
           <Label>상품 이미지</Label>
-          {existingImages.length > 0 && (
+          {(existingImages.length > 0 || newImagePreviews.length > 0) && (
             <div className="flex flex-wrap gap-2 mb-2">
               {existingImages.map((url) => (
                 <div
@@ -121,6 +158,22 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
                   </button>
                 </div>
               ))}
+              {newImagePreviews.map((url, i) => (
+                <div
+                  key={url}
+                  className="relative w-20 h-20 rounded-lg overflow-hidden border border-gold"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={url}
+                    alt={`새 이미지 ${i + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <span className="absolute bottom-0 inset-x-0 bg-gold/90 text-white text-[10px] text-center">
+                    NEW
+                  </span>
+                </div>
+              ))}
             </div>
           )}
           <input
@@ -129,6 +182,7 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
             type="file"
             accept="image/*"
             multiple
+            onChange={handleImagesChange}
             className="w-full border rounded-lg p-2 text-sm"
           />
           <p className="text-xs text-muted-foreground">
@@ -138,25 +192,33 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="price">가격 (원)</Label>
+            <Label htmlFor="price">
+              가격 (원)
+              <RequiredMark />
+            </Label>
             <Input
               id="price"
               name="price"
-              type="number"
-              min={0}
+              type="text"
+              inputMode="numeric"
               required
-              defaultValue={product?.price}
+              value={priceDisplay}
+              onChange={handlePriceChange}
+              placeholder="0"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="stock">재고</Label>
+            <Label htmlFor="stock">
+              재고
+              <RequiredMark />
+            </Label>
             <Input
               id="stock"
               name="stock"
               type="number"
               min={0}
               required
-              defaultValue={product?.stock}
+              defaultValue={product?.stock ?? 0}
             />
           </div>
         </div>
