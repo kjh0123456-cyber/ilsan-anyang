@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { login } from "@/lib/actions/auth";
@@ -12,6 +12,21 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // Some browsers silently pre-fill the password field with a
+    // previously-saved value on page load, without selecting the text the
+    // way an explicit autofill-dropdown pick does. That leaves stray content
+    // sitting in the field, so the next keystroke lands wherever the cursor
+    // happens to be instead of replacing it. Force the field back to
+    // genuinely empty right after mount; a deliberate autofill selection
+    // made later by the user (via the browser's suggestion dropdown) still
+    // works normally since it happens after this runs.
+    if (passwordRef.current) {
+      passwordRef.current.value = "";
+    }
+  }, []);
 
   function handleSubmit(formData: FormData) {
     if (isPending) return;
@@ -55,6 +70,7 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
       <div className="space-y-2">
         <Label htmlFor="password">비밀번호</Label>
         <Input
+          ref={passwordRef}
           id="password"
           name="password"
           type="password"

@@ -41,6 +41,7 @@ export default async function SignupPage({
               id="password"
               name="password"
               type="password"
+              autoComplete="new-password"
               required
               placeholder="8자 이상"
               minLength={8}
