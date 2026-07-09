@@ -48,7 +48,7 @@ export default async function HomePage() {
             <Link href="/about">
               <Button
                 variant="outline"
-                className="border-white text-white hover:bg-white/10 h-12 px-8"
+                className="border-2 border-navy text-navy hover:bg-navy/5 h-12 px-8"
               >
                 브랜드 소개
               </Button>
