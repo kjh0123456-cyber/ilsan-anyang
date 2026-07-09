@@ -6,6 +6,7 @@ import ProductImageGallery from "@/components/products/product-image-gallery";
 import ReviewList from "@/components/reviews/review-list";
 import ReviewForm from "@/components/reviews/review-form";
 import AddToCartButton from "@/components/cart/add-to-cart-button";
+import BuyNowButton from "@/components/cart/buy-now-button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/utils";
 
@@ -62,7 +63,10 @@ export default async function ProductDetailPage({
               </p>
             </div>
           ) : (
-            <AddToCartButton product={product} />
+            <div className="flex gap-3">
+              <AddToCartButton product={product} />
+              <BuyNowButton product={product} />
+            </div>
           )}
 
           {Object.keys(product.specs).length > 0 && (

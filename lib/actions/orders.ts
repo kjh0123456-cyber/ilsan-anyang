@@ -16,10 +16,41 @@ const ORDER_STATUSES: OrderStatus[] = [
   "cancelled",
 ];
 
+async function verifyTossPayment(
+  paymentKey: string,
+  tossOrderId: string,
+  amount: number
+) {
+  const secretKey = process.env.TOSS_SECRET_KEY!;
+  const basicAuth = Buffer.from(`${secretKey}:`).toString("base64");
+
+  const res = await fetch("https://api.tosspayments.com/v1/payments/confirm", {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${basicAuth}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ paymentKey, orderId: tossOrderId, amount }),
+  });
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    throw new Error(body?.message ?? "결제 승인에 실패했습니다.");
+  }
+}
+
+/**
+ * 결제 위젯이 successUrl로 리다이렉트해온 뒤에만 호출된다. 토스 서버에
+ * 결제 승인을 먼저 확인하고, 그게 성공했을 때만 주문을 생성한다 —
+ * 결제를 실패/취소하면 주문 행 자체가 생기지 않는다.
+ */
 export async function createOrder(
   items: CartItem[],
-  totalAmount: number
+  totalAmount: number,
+  payment: { tossOrderId: string; paymentKey: string }
 ): Promise<string> {
+  await verifyTossPayment(payment.paymentKey, payment.tossOrderId, totalAmount);
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -28,7 +59,12 @@ export async function createOrder(
 
   const { data: order, error: orderError } = await supabase
     .from("orders")
-    .insert({ user_id: user.id, total_amount: totalAmount, status: "paid" })
+    .insert({
+      user_id: user.id,
+      total_amount: totalAmount,
+      status: "paid",
+      toss_payment_key: payment.paymentKey,
+    })
     .select()
     .single();
 
@@ -61,16 +97,6 @@ export async function createOrder(
   }
 
   return order.id;
-}
-
-export async function confirmPayment(orderId: string, paymentKey: string) {
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("orders")
-    .update({ toss_payment_key: paymentKey, status: "paid" })
-    .eq("id", orderId);
-
-  if (error) throw new Error("결제 확인 실패");
 }
 
 export async function getOrders(): Promise<Order[]> {

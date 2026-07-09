@@ -1,17 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "@/hooks/use-cart";
-import { createOrder } from "@/lib/actions/orders";
+import { getProductById } from "@/lib/actions/products";
 import { createClient } from "@/lib/supabase/client";
 import TossPaymentWidget from "@/components/checkout/toss-payment-widget";
 import { formatPrice } from "@/lib/utils";
+import type { CartItem } from "@/lib/types";
 
-export default function CheckoutPage() {
-  const items = useCart((s) => s.items);
-  const total = useCart((s) => s.total());
-  const [orderId, setOrderId] = useState<string | null>(null);
-  const [userEmail, setUserEmail] = useState("");
+function CheckoutContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const buyNowId = searchParams.get("buyNow");
+  const buyNowQty = Number(searchParams.get("qty") ?? "1") || 1;
+
+  const cartItems = useCart((s) => s.items);
+  const [buyNowItem, setBuyNowItem] = useState<CartItem | null>(null);
+  const [loadingBuyNow, setLoadingBuyNow] = useState(!!buyNowId);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [tossOrderId] = useState(() => crypto.randomUUID());
+
+  const items = useMemo(
+    () => (buyNowId ? (buyNowItem ? [buyNowItem] : []) : cartItems),
+    [buyNowId, buyNowItem, cartItems]
+  );
+  const total = useMemo(
+    () => items.reduce((sum, i) => sum + i.product.price * i.quantity, 0),
+    [items]
+  );
   const SHIPPING = total >= 50000 ? 0 : 3000;
   const finalAmount = total + SHIPPING;
 
@@ -21,27 +38,54 @@ export default function CheckoutPage() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user || items.length === 0) return;
 
-      setUserEmail(user.email ?? "");
-      try {
-        const id = await createOrder(items, finalAmount);
-        setOrderId(id);
-      } catch (err) {
-        console.error("Order creation failed:", err);
+      if (!user) {
+        router.push(
+          `/auth/login?redirect=${encodeURIComponent(
+            `/checkout${window.location.search}`
+          )}`
+        );
+        return;
       }
+      setUserEmail(user.email ?? "");
     }
     prepare();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [router]);
+
+  useEffect(() => {
+    if (!buyNowId) return;
+    let cancelled = false;
+    getProductById(buyNowId).then((product) => {
+      if (cancelled) return;
+      if (product) {
+        setBuyNowItem({ product, quantity: buyNowQty });
+      }
+      setLoadingBuyNow(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [buyNowId, buyNowQty]);
+
+  if (loadingBuyNow || userEmail === null) {
+    return (
+      <div className="text-center py-20 text-muted-foreground">불러오는 중...</div>
+    );
+  }
 
   if (items.length === 0) {
     return (
       <div className="text-center py-20 text-muted-foreground">
-        장바구니가 비어있습니다.
+        {buyNowId ? "상품을 찾을 수 없습니다." : "장바구니가 비어있습니다."}
       </div>
     );
   }
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const successUrl = buyNowId
+    ? `${baseUrl}/checkout/success?buyNow=${buyNowId}&qty=${buyNowQty}`
+    : `${baseUrl}/checkout/success`;
+  const failUrl = `${baseUrl}/checkout/fail`;
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">
@@ -69,17 +113,26 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      {orderId ? (
-        <TossPaymentWidget
-          orderId={orderId}
-          amount={finalAmount}
-          customerEmail={userEmail}
-        />
-      ) : (
-        <div className="text-center text-muted-foreground py-8">
-          결제 준비 중...
-        </div>
-      )}
+      <TossPaymentWidget
+        orderId={tossOrderId}
+        amount={finalAmount}
+        customerEmail={userEmail}
+        orderName={
+          items.length > 1
+            ? `${items[0].product.name} 외 ${items.length - 1}건`
+            : items[0].product.name
+        }
+        successUrl={successUrl}
+        failUrl={failUrl}
+      />
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={null}>
+      <CheckoutContent />
+    </Suspense>
   );
 }

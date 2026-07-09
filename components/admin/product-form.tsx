@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -82,10 +83,12 @@ export default function ProductForm({ product, submitLabel }: ProductFormProps) 
 
       if (result?.error) {
         setError(result.error);
+        toast.error(result.error);
         return;
       }
 
       setSuccess(true);
+      toast.success(successMessage);
       setTimeout(() => {
         router.push("/admin/products");
       }, 700);

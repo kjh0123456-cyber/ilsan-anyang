@@ -1,3 +1,8 @@
+"use client";
+
+import { Suspense, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import { XCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,16 +14,18 @@ const ERROR_MESSAGES: Record<string, string> = {
     "카드사에서 결제를 거부했습니다. 다른 카드를 사용해주세요.",
 };
 
-export default async function CheckoutFailPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ code?: string; message?: string }>;
-}) {
-  const params = await searchParams;
+function CheckoutFailContent() {
+  const searchParams = useSearchParams();
+  const code = searchParams.get("code");
   const message =
-    (params.code && ERROR_MESSAGES[params.code]) ||
-    params.message ||
+    (code && ERROR_MESSAGES[code]) ||
+    searchParams.get("message") ||
     "결제 중 오류가 발생했습니다.";
+
+  useEffect(() => {
+    toast.error(message);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -33,5 +40,13 @@ export default async function CheckoutFailPage({
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutFailPage() {
+  return (
+    <Suspense fallback={null}>
+      <CheckoutFailContent />
+    </Suspense>
   );
 }

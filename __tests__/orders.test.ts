@@ -72,12 +72,18 @@ function buildSupabaseMock({
   };
 }
 
+const payment = { tossOrderId: "toss-order-1", paymentKey: "payment-key-1" };
+
 describe("createOrder", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    }) as unknown as typeof fetch;
   });
 
-  it("주문 생성 성공 시 구매자와 관리자에게 이메일을 발송한다", async () => {
+  it("토스 결제 승인을 먼저 확인한 뒤 주문을 생성하고 구매자와 관리자에게 이메일을 발송한다", async () => {
     const supabaseMock = buildSupabaseMock({
       user: { id: "u1", email: "buyer@test.com" },
       orderInsertResult: { data: { id: "order-1" }, error: null },
@@ -85,7 +91,12 @@ describe("createOrder", () => {
     });
     (createClient as jest.Mock).mockResolvedValue(supabaseMock);
 
-    const orderId = await createOrder(mockItems, 200000);
+    const orderId = await createOrder(mockItems, 200000, payment);
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api.tosspayments.com/v1/payments/confirm",
+      expect.objectContaining({ method: "POST" })
+    );
 
     expect(orderId).toBe("order-1");
     expect(sendOrderConfirmationEmail).toHaveBeenCalledWith(
@@ -113,8 +124,26 @@ describe("createOrder", () => {
     );
     jest.spyOn(console, "error").mockImplementation(() => {});
 
-    const orderId = await createOrder(mockItems, 200000);
+    const orderId = await createOrder(mockItems, 200000, payment);
 
     expect(orderId).toBe("order-2");
+  });
+
+  it("토스 결제 승인이 실패하면 주문을 생성하지 않고 에러를 던진다", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({ message: "카드 승인 거절" }),
+    }) as unknown as typeof fetch;
+    const supabaseMock = buildSupabaseMock({
+      user: { id: "u1", email: "buyer@test.com" },
+      orderInsertResult: { data: { id: "order-3" }, error: null },
+      itemsInsertResult: { error: null },
+    });
+    (createClient as jest.Mock).mockResolvedValue(supabaseMock);
+
+    await expect(createOrder(mockItems, 200000, payment)).rejects.toThrow(
+      "카드 승인 거절"
+    );
+    expect(supabaseMock.from).not.toHaveBeenCalled();
   });
 });
