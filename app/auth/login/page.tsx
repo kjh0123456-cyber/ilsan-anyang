@@ -8,6 +8,10 @@ export default async function LoginPage({
 }) {
   const params = await searchParams;
   const redirectTo = params.redirect || "/";
+  const signupHref =
+    redirectTo === "/"
+      ? "/auth/signup"
+      : `/auth/signup?redirect=${encodeURIComponent(redirectTo)}`;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -29,10 +33,7 @@ export default async function LoginPage({
         </p>
         <p className="text-sm text-center mt-2 text-muted-foreground">
           계정이 없으신가요?{" "}
-          <Link
-            href="/auth/signup"
-            className="text-navy font-medium hover:underline"
-          >
+          <Link href={signupHref} className="text-navy font-medium hover:underline">
             회원가입
           </Link>
         </p>

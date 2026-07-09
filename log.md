@@ -133,3 +133,9 @@
 - 2026-07-09 16:04:14 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\smoke-admin.js
 - 2026-07-09 16:13:20 | C:\Users\김종해\.claude\projects\C--Users-----claude\memory\ilsan_anyang_toss_payments.md
 - 2026-07-09 16:24:47 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-password-field.js
+- 2026-07-09 16:44:35 | C:\Users\김종해\claude\ilsan-anyang\components\auth\signup-form.tsx
+- 2026-07-09 16:44:48 | C:\Users\김종해\claude\ilsan-anyang\app\auth\signup\page.tsx
+- 2026-07-09 16:46:23 | C:\Users\김종해\claude\ilsan-anyang\__tests__\signup.test.ts
+- 2026-07-09 16:47:34 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-buynow-auth.js
+- 2026-07-09 16:50:16 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-buynow-full-flow.js
+- 2026-07-09 16:51:01 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\debug-signup.js

@@ -36,10 +36,12 @@ export async function middleware(request: NextRequest) {
   );
 
   if (isProtected && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
-    url.searchParams.set("redirect", request.nextUrl.pathname);
-    return NextResponse.redirect(url);
+    const loginUrl = new URL("/auth/login", request.url);
+    loginUrl.searchParams.set(
+      "redirect",
+      request.nextUrl.pathname + request.nextUrl.search
+    );
+    return NextResponse.redirect(loginUrl);
   }
 
   return supabaseResponse;

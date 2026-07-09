@@ -1,16 +1,17 @@
-import { signup } from "@/lib/actions/auth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import SignupForm from "@/components/auth/signup-form";
 import Link from "next/link";
 
 export default async function SignupPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ redirect?: string }>;
 }) {
   const params = await searchParams;
-  const errorMessage = params.error;
+  const redirectTo = params.redirect || "/";
+  const loginHref =
+    redirectTo === "/"
+      ? "/auth/login"
+      : `/auth/login?redirect=${encodeURIComponent(redirectTo)}`;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -19,47 +20,12 @@ export default async function SignupPage({
         <p className="text-sm text-muted-foreground mb-6">
           일산안양 스마트홈 멤버가 되어보세요
         </p>
-        {errorMessage && (
-          <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-700 text-sm">
-            {errorMessage}
-          </div>
-        )}
-        <form action={signup} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">이메일</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              required
-              placeholder="hello@example.com"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">비밀번호</Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              placeholder="8자 이상"
-              minLength={8}
-            />
-          </div>
-          <Button
-            type="submit"
-            className="w-full bg-navy hover:bg-navy-light text-white"
-          >
-            가입하기
-          </Button>
-        </form>
+
+        <SignupForm redirectTo={redirectTo} />
+
         <p className="text-sm text-center mt-4 text-muted-foreground">
           이미 계정이 있으신가요?{" "}
-          <Link
-            href="/auth/login"
-            className="text-navy font-medium hover:underline"
-          >
+          <Link href={loginHref} className="text-navy font-medium hover:underline">
             로그인
           </Link>
         </p>
