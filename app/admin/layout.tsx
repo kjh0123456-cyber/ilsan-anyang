@@ -1,16 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isAdmin } from "@/lib/actions/auth";
 import Link from "next/link";
-
-async function isAdmin(userId: string): Promise<boolean> {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("admin_users")
-    .select("user_id")
-    .eq("user_id", userId)
-    .single();
-  return !!data;
-}
 
 export default async function AdminLayout({
   children,

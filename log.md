@@ -73,3 +73,10 @@
 - 2026-07-09 09:58:30 | C:\Users\김종해\claude\ilsan-anyang\__tests__\request-password-reset.test.ts
 - 2026-07-09 10:14:08 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\verify-reset-email.mjs
 - 2026-07-09 11:08:50 | C:\Users\김종해\claude\ilsan-anyang\__tests__\request-password-reset.test.ts
+- 2026-07-09 12:36:26 | C:\Users\김종해\.claude\projects\C--Users-----claude\memory\ilsan_anyang_password_reset.md
+- 2026-07-09 12:36:30 | C:\Users\김종해\.claude\projects\C--Users-----claude\memory\MEMORY.md
+- 2026-07-09 12:37:27 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\crawl.js
+- 2026-07-09 13:07:11 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\login-and-check.js
+- 2026-07-09 13:08:47 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\login-and-check.js
+- 2026-07-09 13:10:34 | C:\Users\김종해\claude\ilsan-anyang\supabase\migrations\002_admin_users_select_policy.sql
+- 2026-07-09 13:17:47 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\screenshot-header.js

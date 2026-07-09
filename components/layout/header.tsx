@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ShoppingCart, User } from "lucide-react";
+import { ShoppingCart, User, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getUser, logout } from "@/lib/actions/auth";
+import { Badge } from "@/components/ui/badge";
+import { getUser, isAdmin, logout } from "@/lib/actions/auth";
 
 const NAV_LINKS = [
   { href: "/products?category=vacuum", label: "로봇청소기" },
@@ -13,6 +14,7 @@ const NAV_LINKS = [
 
 export default async function Header() {
   const user = await getUser();
+  const admin = user ? await isAdmin(user.id) : false;
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
@@ -38,6 +40,23 @@ export default async function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
+            {admin && (
+              <>
+                <Badge className="hidden sm:inline-flex bg-gold/10 text-gold border border-gold/30">
+                  관리자 모드
+                </Badge>
+                <Link href="/admin">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-gold hover:text-gold hover:bg-gold/10 gap-1"
+                  >
+                    <ShieldCheck className="h-4 w-4" />
+                    관리자
+                  </Button>
+                </Link>
+              </>
+            )}
             <Link href="/cart">
               <Button variant="ghost" size="icon" aria-label="장바구니">
                 <ShoppingCart className="h-5 w-5" />
