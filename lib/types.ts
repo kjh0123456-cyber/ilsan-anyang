@@ -22,6 +22,7 @@ export interface Order {
   toss_payment_key: string | null;
   created_at: string;
   order_items?: OrderItem[];
+  buyer_email?: string;
 }
 
 export interface OrderItem {

@@ -4,6 +4,14 @@ jest.mock("../lib/supabase/server", () => ({
   createClient: jest.fn(),
 }));
 
+jest.mock("../lib/supabase/admin", () => ({
+  createAdminClient: jest.fn(),
+}));
+
+jest.mock("next/cache", () => ({
+  revalidatePath: jest.fn(),
+}));
+
 jest.mock("../lib/email", () => ({
   sendOrderConfirmationEmail: jest.fn(),
   sendAdminOrderNotificationEmail: jest.fn(),

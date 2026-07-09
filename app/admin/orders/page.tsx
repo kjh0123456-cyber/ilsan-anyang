@@ -1,30 +1,14 @@
-import { getOrders, updateOrderStatus } from "@/lib/actions/orders";
+import { getAllOrdersForAdmin } from "@/lib/actions/orders";
 import { formatPrice, formatDate } from "@/lib/utils";
-import { revalidatePath } from "next/cache";
+import OrderStatusSelect from "@/components/admin/order-status-select";
 import type { Order } from "@/lib/types";
-
-const STATUS_OPTIONS = ["paid", "shipping", "delivered", "cancelled"];
-const STATUS_LABELS: Record<string, string> = {
-  paid: "결제완료",
-  shipping: "배송중",
-  delivered: "배송완료",
-  cancelled: "취소됨",
-};
 
 export default async function AdminOrdersPage() {
   let orders: Order[] = [];
   try {
-    orders = await getOrders();
+    orders = await getAllOrdersForAdmin();
   } catch {
     orders = [];
-  }
-
-  async function changeStatus(formData: FormData) {
-    "use server";
-    const orderId = formData.get("orderId") as string;
-    const status = formData.get("status") as string;
-    await updateOrderStatus(orderId, status);
-    revalidatePath("/admin/orders");
   }
 
   return (
@@ -36,39 +20,37 @@ export default async function AdminOrdersPage() {
         <div className="space-y-4">
           {orders.map((order) => (
             <div key={order.id} className="bg-white border rounded-lg p-6">
-              <div className="flex justify-between items-center mb-2">
+              <div className="flex justify-between items-start mb-4">
                 <div>
-                  <span className="text-xs text-muted-foreground">
-                    {formatDate(order.created_at)}
-                  </span>
-                  <span className="text-xs text-muted-foreground ml-2">
-                    #{order.id.slice(0, 8)}
-                  </span>
+                  <p className="text-xs text-muted-foreground">
+                    {formatDate(order.created_at)} · 주문번호 #
+                    {order.id.slice(0, 8)}
+                  </p>
+                  <p className="text-sm font-medium text-navy mt-1">
+                    {order.buyer_email ?? "알 수 없는 사용자"}
+                  </p>
                 </div>
-                <form action={changeStatus} className="flex items-center gap-2">
-                  <input type="hidden" name="orderId" value={order.id} />
-                  <select
-                    name="status"
-                    defaultValue={order.status}
-                    className="text-sm border rounded-lg px-2 py-1"
-                  >
-                    {STATUS_OPTIONS.map((s) => (
-                      <option key={s} value={s}>
-                        {STATUS_LABELS[s]}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    type="submit"
-                    className="text-xs bg-navy text-white px-3 py-1 rounded-lg hover:bg-navy-light"
-                  >
-                    변경
-                  </button>
-                </form>
+                <OrderStatusSelect orderId={order.id} status={order.status} />
               </div>
-              <p className="font-bold text-navy">
-                {formatPrice(order.total_amount)}
-              </p>
+
+              <div className="border-t pt-3 space-y-1">
+                {order.order_items?.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex justify-between text-sm text-gray-700"
+                  >
+                    <span>
+                      {item.product?.name ?? "상품"} × {item.quantity}
+                    </span>
+                    <span>{formatPrice(item.unit_price * item.quantity)}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex justify-between font-bold text-navy mt-3 pt-3 border-t">
+                <span>합계</span>
+                <span>{formatPrice(order.total_amount)}</span>
+              </div>
             </div>
           ))}
         </div>

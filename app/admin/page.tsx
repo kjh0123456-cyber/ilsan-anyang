@@ -1,5 +1,5 @@
 import { getAllProducts } from "@/lib/actions/products";
-import { getOrders } from "@/lib/actions/orders";
+import { getAllOrdersForAdmin } from "@/lib/actions/orders";
 import { formatPrice } from "@/lib/utils";
 import type { Product, Order } from "@/lib/types";
 
@@ -7,7 +7,10 @@ export default async function AdminDashboard() {
   let products: Product[] = [];
   let orders: Order[] = [];
   try {
-    [products, orders] = await Promise.all([getAllProducts(), getOrders()]);
+    [products, orders] = await Promise.all([
+      getAllProducts(),
+      getAllOrdersForAdmin(),
+    ]);
   } catch {
     // Supabase not configured — show zeros
   }

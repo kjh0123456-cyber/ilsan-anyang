@@ -1,11 +1,20 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import type { Order, CartItem } from "@/lib/types";
+import { createAdminClient } from "@/lib/supabase/admin";
+import type { Order, OrderStatus, CartItem } from "@/lib/types";
 import {
   sendOrderConfirmationEmail,
   sendAdminOrderNotificationEmail,
 } from "@/lib/email";
+import { revalidatePath } from "next/cache";
+
+const ORDER_STATUSES: OrderStatus[] = [
+  "paid",
+  "shipping",
+  "delivered",
+  "cancelled",
+];
 
 export async function createOrder(
   items: CartItem[],
@@ -81,7 +90,46 @@ export async function getOrders(): Promise<Order[]> {
   return data as Order[];
 }
 
+export async function getAllOrdersForAdmin(): Promise<Order[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*, order_items(*, product:products(*))")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  const orders = data as Order[];
+
+  if (orders.length === 0) return orders;
+
+  const admin = createAdminClient();
+  const emailByUserId = new Map<string, string>();
+  let page = 1;
+  const perPage = 200;
+  while (true) {
+    const {
+      data: { users },
+      error: usersError,
+    } = await admin.auth.admin.listUsers({ page, perPage });
+    if (usersError) break;
+    for (const u of users) {
+      if (u.email) emailByUserId.set(u.id, u.email);
+    }
+    if (users.length < perPage) break;
+    page += 1;
+  }
+
+  return orders.map((order) => ({
+    ...order,
+    buyer_email: emailByUserId.get(order.user_id),
+  }));
+}
+
 export async function updateOrderStatus(orderId: string, status: string) {
+  if (!ORDER_STATUSES.includes(status as OrderStatus)) {
+    throw new Error("올바르지 않은 주문 상태입니다.");
+  }
+
   const supabase = await createClient();
   const { error } = await supabase
     .from("orders")
@@ -89,4 +137,8 @@ export async function updateOrderStatus(orderId: string, status: string) {
     .eq("id", orderId);
 
   if (error) throw new Error("상태 업데이트 실패");
+
+  revalidatePath("/admin/orders");
+  revalidatePath("/admin");
+  revalidatePath("/orders");
 }

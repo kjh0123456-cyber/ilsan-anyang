@@ -86,3 +86,7 @@
 - 2026-07-09 13:33:09 | C:\Users\김종해\claude\ilsan-anyang\app\admin\products\new\page.tsx
 - 2026-07-09 13:33:25 | C:\Users\김종해\claude\ilsan-anyang\app\admin\products\[id]\edit\page.tsx
 - 2026-07-09 13:35:08 | C:\Users\김종해\claude\ilsan-anyang\__tests__\update-delete-product.test.ts
+- 2026-07-09 13:52:05 | C:\Users\김종해\claude\ilsan-anyang\components\admin\order-status-select.tsx
+- 2026-07-09 13:52:39 | C:\Users\김종해\claude\ilsan-anyang\app\admin\orders\page.tsx
+- 2026-07-09 13:53:47 | C:\Users\김종해\claude\ilsan-anyang\__tests__\admin-orders.test.ts
+- 2026-07-09 13:55:32 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\test-admin-orders.js
