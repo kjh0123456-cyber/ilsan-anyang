@@ -91,3 +91,4 @@
 - 2026-07-09 13:53:47 | C:\Users\김종해\claude\ilsan-anyang\__tests__\admin-orders.test.ts
 - 2026-07-09 13:55:32 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\test-admin-orders.js
 - 2026-07-09 14:03:18 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\test-dashboard.js
+- 2026-07-09 14:14:33 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\test-big-upload.js
