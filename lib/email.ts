@@ -70,3 +70,23 @@ export async function sendAdminOrderNotificationEmail(
   const { subject, html } = buildAdminOrderNotificationEmail(buyerEmail, data);
   await resend.emails.send({ from: FROM_EMAIL, to: adminEmail, subject, html });
 }
+
+export function buildPasswordResetEmail(resetLink: string) {
+  return {
+    subject: "[일산안양] 비밀번호 재설정 안내",
+    html: `
+      <h1>비밀번호 재설정</h1>
+      <p>아래 링크를 클릭하여 비밀번호를 재설정해주세요.</p>
+      <p><a href="${resetLink}">${resetLink}</a></p>
+      <p>본인이 요청하지 않았다면 이 이메일을 무시하셔도 됩니다.</p>
+    `,
+  };
+}
+
+export async function sendPasswordResetEmail(
+  to: string,
+  resetLink: string
+): Promise<void> {
+  const { subject, html } = buildPasswordResetEmail(resetLink);
+  await resend.emails.send({ from: FROM_EMAIL, to, subject, html });
+}

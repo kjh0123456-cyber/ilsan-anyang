@@ -67,3 +67,8 @@
 - 2026-07-08 11:52:28 | C:\Users\김종해\claude\ilsan-anyang\__tests__\request-password-reset.test.ts
 - 2026-07-08 11:53:06 | C:\Users\김종해\claude\ilsan-anyang\app\auth\forgot-password\page.tsx
 - 2026-07-08 11:53:16 | C:\Users\김종해\claude\ilsan-anyang\app\auth\reset-password\page.tsx
+- 2026-07-08 11:57:04 | C:\temp\claude\C--Users-----claude\184dc545-7187-4f8b-badc-34822a5352ec\scratchpad\request-reset.mjs
+- 2026-07-09 09:34:29 | C:\temp\claude\C--Users-----claude\05da04a8-5f9b-49f9-bf68-17bcf73e9ff5\scratchpad\check-button.js
+- 2026-07-09 09:58:01 | C:\Users\김종해\claude\ilsan-anyang\lib\supabase\admin.ts
+- 2026-07-09 09:58:30 | C:\Users\김종해\claude\ilsan-anyang\__tests__\request-password-reset.test.ts
+- 2026-07-09 10:14:08 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\verify-reset-email.mjs
