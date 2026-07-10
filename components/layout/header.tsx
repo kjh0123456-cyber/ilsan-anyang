@@ -36,7 +36,7 @@ export default async function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm text-gray-600 hover:text-navy transition-colors whitespace-nowrap"
+                className="text-sm text-gray-600 hover:text-navy transition-colors whitespace-nowrap rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
               >
                 {link.label}
               </Link>
