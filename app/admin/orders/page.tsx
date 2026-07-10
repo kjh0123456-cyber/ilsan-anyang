@@ -51,6 +51,21 @@ export default async function AdminOrdersPage() {
                 <span className="whitespace-nowrap">합계</span>
                 <span className="break-all text-right">{formatPrice(order.total_amount)}</span>
               </div>
+
+              {order.recipient_name && (
+                <div className="mt-3 pt-3 border-t text-sm text-gray-700">
+                  <p className="font-medium text-navy mb-1">배송지</p>
+                  <p className="break-words">
+                    {order.recipient_name} · {order.phone}
+                  </p>
+                  <p className="break-words">
+                    ({order.zip_code}) {order.address} {order.address_detail}
+                  </p>
+                  {order.delivery_request && (
+                    <p className="break-words">{order.delivery_request}</p>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>

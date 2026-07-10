@@ -2,7 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import type { Order, OrderStatus, CartItem } from "@/lib/types";
+import type { Order, OrderStatus, CartItem, ShippingInfo } from "@/lib/types";
+import { validateShippingInfo } from "@/lib/utils";
 import {
   sendOrderConfirmationEmail,
   sendAdminOrderNotificationEmail,
@@ -47,8 +48,12 @@ async function verifyTossPayment(
 export async function createOrder(
   items: CartItem[],
   totalAmount: number,
-  payment: { tossOrderId: string; paymentKey: string }
+  payment: { tossOrderId: string; paymentKey: string },
+  shipping: ShippingInfo
 ): Promise<string> {
+  const shippingError = validateShippingInfo(shipping);
+  if (shippingError) throw new Error(shippingError);
+
   await verifyTossPayment(payment.paymentKey, payment.tossOrderId, totalAmount);
 
   const supabase = await createClient();
@@ -64,6 +69,12 @@ export async function createOrder(
       total_amount: totalAmount,
       status: "paid",
       toss_payment_key: payment.paymentKey,
+      recipient_name: shipping.recipientName,
+      phone: shipping.phone,
+      zip_code: shipping.zipCode,
+      address: shipping.address,
+      address_detail: shipping.addressDetail,
+      delivery_request: shipping.deliveryRequest || null,
     })
     .select()
     .single();
@@ -97,6 +108,38 @@ export async function createOrder(
   }
 
   return order.id;
+}
+
+/**
+ * 로그인한 사용자가 가장 최근 주문에서 입력했던 배송지 정보를 불러온다.
+ * 결제 페이지의 배송 정보 입력 단계에서 기본값으로 채워주기 위한 용도.
+ */
+export async function getLastShippingInfo(): Promise<ShippingInfo | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data } = await supabase
+    .from("orders")
+    .select("recipient_name, phone, zip_code, address, address_detail, delivery_request")
+    .eq("user_id", user.id)
+    .not("recipient_name", "is", null)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!data) return null;
+
+  return {
+    recipientName: data.recipient_name ?? "",
+    phone: data.phone ?? "",
+    zipCode: data.zip_code ?? "",
+    address: data.address ?? "",
+    addressDetail: data.address_detail ?? "",
+    deliveryRequest: data.delivery_request ?? "",
+  };
 }
 
 export async function getOrders(): Promise<Order[]> {

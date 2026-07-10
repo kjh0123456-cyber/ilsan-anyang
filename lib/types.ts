@@ -22,8 +22,23 @@ export interface Order {
   status: OrderStatus;
   toss_payment_key: string | null;
   created_at: string;
+  recipient_name: string | null;
+  phone: string | null;
+  zip_code: string | null;
+  address: string | null;
+  address_detail: string | null;
+  delivery_request: string | null;
   order_items?: OrderItem[];
   buyer_email?: string;
+}
+
+export interface ShippingInfo {
+  recipientName: string;
+  phone: string;
+  zipCode: string;
+  address: string;
+  addressDetail: string;
+  deliveryRequest: string;
 }
 
 export interface OrderItem {

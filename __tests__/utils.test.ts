@@ -2,9 +2,11 @@ import {
   formatPrice,
   formatDate,
   validateNewPassword,
+  validateShippingInfo,
   toKstDateString,
   toKstYearMonth,
 } from "@/lib/utils";
+import type { ShippingInfo } from "@/lib/types";
 
 describe("formatPrice", () => {
   it("1000원을 '1,000원'으로 포맷한다", () => {
@@ -65,5 +67,57 @@ describe("validateNewPassword", () => {
 
   it("8자 이상이고 서로 일치하면 null을 반환한다", () => {
     expect(validateNewPassword("password1", "password1")).toBeNull();
+  });
+});
+
+describe("validateShippingInfo", () => {
+  const valid: ShippingInfo = {
+    recipientName: "홍길동",
+    phone: "010-1234-5678",
+    zipCode: "12345",
+    address: "경기도 고양시 일산동구 중앙로 123",
+    addressDetail: "101동 202호",
+    deliveryRequest: "",
+  };
+
+  it("모든 필수 항목이 채워져 있으면 null을 반환한다", () => {
+    expect(validateShippingInfo(valid)).toBeNull();
+  });
+
+  it("배송 요청사항은 선택 입력이라 비어 있어도 통과한다", () => {
+    expect(validateShippingInfo({ ...valid, deliveryRequest: "" })).toBeNull();
+  });
+
+  it("수령인 이름이 비어있으면 에러 메시지를 반환한다", () => {
+    expect(validateShippingInfo({ ...valid, recipientName: "  " })).toBe(
+      "수령인 이름을 입력해주세요."
+    );
+  });
+
+  it("연락처가 비어있으면 에러 메시지를 반환한다", () => {
+    expect(validateShippingInfo({ ...valid, phone: "" })).toBe(
+      "연락처를 입력해주세요."
+    );
+  });
+
+  it("연락처 형식이 올바르지 않으면 에러 메시지를 반환한다", () => {
+    expect(validateShippingInfo({ ...valid, phone: "전화주세요" })).toBe(
+      "올바른 연락처 형식이 아닙니다."
+    );
+  });
+
+  it("우편번호나 주소가 비어있으면 에러 메시지를 반환한다", () => {
+    expect(validateShippingInfo({ ...valid, zipCode: "" })).toBe(
+      "우편번호 검색으로 배송지 주소를 입력해주세요."
+    );
+    expect(validateShippingInfo({ ...valid, address: "" })).toBe(
+      "우편번호 검색으로 배송지 주소를 입력해주세요."
+    );
+  });
+
+  it("상세 주소가 비어있으면 에러 메시지를 반환한다", () => {
+    expect(validateShippingInfo({ ...valid, addressDetail: "" })).toBe(
+      "상세 주소를 입력해주세요."
+    );
   });
 });

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/use-cart";
 import { createOrder } from "@/lib/actions/orders";
 import { getProductById } from "@/lib/actions/products";
-import type { CartItem } from "@/lib/types";
+import type { CartItem, ShippingInfo } from "@/lib/types";
 
 function CheckoutSuccessContent() {
   const searchParams = useSearchParams();
@@ -30,6 +30,14 @@ function CheckoutSuccessContent() {
     const amount = Number(searchParams.get("amount"));
     const buyNowId = searchParams.get("buyNow");
     const buyNowQty = Number(searchParams.get("qty") ?? "1") || 1;
+    const shipping: ShippingInfo = {
+      recipientName: searchParams.get("recipientName") ?? "",
+      phone: searchParams.get("phone") ?? "",
+      zipCode: searchParams.get("zipCode") ?? "",
+      address: searchParams.get("address") ?? "",
+      addressDetail: searchParams.get("addressDetail") ?? "",
+      deliveryRequest: searchParams.get("deliveryRequest") ?? "",
+    };
 
     async function run() {
       if (!tossOrderId || !paymentKey || !amount) {
@@ -57,7 +65,7 @@ function CheckoutSuccessContent() {
       }
 
       try {
-        await createOrder(items, amount, { tossOrderId, paymentKey });
+        await createOrder(items, amount, { tossOrderId, paymentKey }, shipping);
         if (!buyNowId) clearCart();
         toast.success("결제가 완료되었습니다.");
         setState("done");

@@ -5,10 +5,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/use-cart";
 import { getProductById } from "@/lib/actions/products";
+import { getLastShippingInfo } from "@/lib/actions/orders";
 import { createClient } from "@/lib/supabase/client";
 import TossPaymentWidget from "@/components/checkout/toss-payment-widget";
+import ShippingForm from "@/components/checkout/shipping-form";
 import { formatPrice } from "@/lib/utils";
-import type { CartItem } from "@/lib/types";
+import type { CartItem, ShippingInfo } from "@/lib/types";
 
 function CheckoutContent() {
   const router = useRouter();
@@ -23,6 +25,9 @@ function CheckoutContent() {
   const [authError, setAuthError] = useState(false);
   const [authRetryKey, setAuthRetryKey] = useState(0);
   const [tossOrderId] = useState(() => crypto.randomUUID());
+  const [step, setStep] = useState<"shipping" | "payment">("shipping");
+  const [shipping, setShipping] = useState<ShippingInfo | null>(null);
+  const [lastShipping, setLastShipping] = useState<ShippingInfo | null>(null);
 
   const items = useMemo(
     () => (buyNowId ? (buyNowItem ? [buyNowItem] : []) : cartItems),
@@ -56,6 +61,9 @@ function CheckoutContent() {
           return;
         }
         setUserEmail(user.email ?? "");
+
+        const previous = await getLastShippingInfo();
+        if (!cancelled && previous) setLastShipping(previous);
       } catch {
         // Transient network failure talking to Supabase Auth — don't strand
         // the user on an infinite "불러오는 중..." with no way out.
@@ -114,15 +122,82 @@ function CheckoutContent() {
     );
   }
 
+  const stepIndicator = (
+    <div className="flex items-center gap-2 text-sm mb-8">
+      <span className={step === "shipping" ? "font-bold text-gold" : "text-muted-foreground"}>
+        1. 배송 정보
+      </span>
+      <span className="text-muted-foreground">→</span>
+      <span className={step === "payment" ? "font-bold text-gold" : "text-muted-foreground"}>
+        2. 결제
+      </span>
+    </div>
+  );
+
+  if (step === "shipping") {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-12">
+        <h1 className="text-xl font-bold text-navy mb-2">결제</h1>
+        {stepIndicator}
+        <div className="bg-white border rounded-lg p-6">
+          <ShippingForm
+            initial={shipping ?? lastShipping}
+            onSubmit={(info) => {
+              setShipping(info);
+              setStep("payment");
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (!shipping) return null;
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const successUrl = buyNowId
-    ? `${baseUrl}/checkout/success?buyNow=${buyNowId}&qty=${buyNowQty}`
-    : `${baseUrl}/checkout/success`;
+  const successParams = new URLSearchParams();
+  if (buyNowId) {
+    successParams.set("buyNow", buyNowId);
+    successParams.set("qty", String(buyNowQty));
+  }
+  successParams.set("recipientName", shipping.recipientName);
+  successParams.set("phone", shipping.phone);
+  successParams.set("zipCode", shipping.zipCode);
+  successParams.set("address", shipping.address);
+  successParams.set("addressDetail", shipping.addressDetail);
+  successParams.set("deliveryRequest", shipping.deliveryRequest);
+  const successUrl = `${baseUrl}/checkout/success?${successParams.toString()}`;
   const failUrl = `${baseUrl}/checkout/fail`;
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">
-      <h1 className="text-xl font-bold text-navy mb-8">결제</h1>
+      <h1 className="text-xl font-bold text-navy mb-2">결제</h1>
+      {stepIndicator}
+
+      <div className="bg-gray-50 rounded-lg p-6 mb-4 text-sm">
+        <div className="flex justify-between items-start">
+          <div>
+            <p className="font-medium">배송지</p>
+            <p className="text-muted-foreground mt-1">
+              {shipping.recipientName} · {shipping.phone}
+            </p>
+            <p className="text-muted-foreground">
+              ({shipping.zipCode}) {shipping.address} {shipping.addressDetail}
+            </p>
+            {shipping.deliveryRequest && (
+              <p className="text-muted-foreground">{shipping.deliveryRequest}</p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => setStep("shipping")}
+            className="text-navy underline shrink-0"
+          >
+            수정
+          </button>
+        </div>
+      </div>
+
       <div className="bg-gray-50 rounded-lg p-6 mb-6 space-y-2 text-sm">
         <p className="font-medium">주문 상품 ({items.length}종)</p>
         {items.map((item) => (

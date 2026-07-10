@@ -1,4 +1,4 @@
-import type { CartItem } from "@/lib/types";
+import type { CartItem, ShippingInfo } from "@/lib/types";
 
 jest.mock("../lib/supabase/server", () => ({
   createClient: jest.fn(),
@@ -22,7 +22,7 @@ import {
   sendOrderConfirmationEmail,
   sendAdminOrderNotificationEmail,
 } from "@/lib/email";
-import { createOrder } from "@/lib/actions/orders";
+import { createOrder, getLastShippingInfo } from "@/lib/actions/orders";
 
 const mockItems: CartItem[] = [
   {
@@ -74,6 +74,15 @@ function buildSupabaseMock({
 
 const payment = { tossOrderId: "toss-order-1", paymentKey: "payment-key-1" };
 
+const mockShipping: ShippingInfo = {
+  recipientName: "홍길동",
+  phone: "010-1234-5678",
+  zipCode: "12345",
+  address: "경기도 고양시 일산동구 중앙로 123",
+  addressDetail: "101동 202호",
+  deliveryRequest: "부재 시 문 앞에 놔주세요",
+};
+
 describe("createOrder", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -91,7 +100,7 @@ describe("createOrder", () => {
     });
     (createClient as jest.Mock).mockResolvedValue(supabaseMock);
 
-    const orderId = await createOrder(mockItems, 200000, payment);
+    const orderId = await createOrder(mockItems, 200000, payment, mockShipping);
 
     expect(global.fetch).toHaveBeenCalledWith(
       "https://api.tosspayments.com/v1/payments/confirm",
@@ -124,7 +133,7 @@ describe("createOrder", () => {
     );
     jest.spyOn(console, "error").mockImplementation(() => {});
 
-    const orderId = await createOrder(mockItems, 200000, payment);
+    const orderId = await createOrder(mockItems, 200000, payment, mockShipping);
 
     expect(orderId).toBe("order-2");
   });
@@ -141,9 +150,104 @@ describe("createOrder", () => {
     });
     (createClient as jest.Mock).mockResolvedValue(supabaseMock);
 
-    await expect(createOrder(mockItems, 200000, payment)).rejects.toThrow(
+    await expect(createOrder(mockItems, 200000, payment, mockShipping)).rejects.toThrow(
       "카드 승인 거절"
     );
     expect(supabaseMock.from).not.toHaveBeenCalled();
+  });
+
+  it("배송 정보가 유효하지 않으면 결제 승인도 시도하지 않고 에러를 던진다", async () => {
+    const invalidShipping: ShippingInfo = { ...mockShipping, recipientName: "" };
+
+    await expect(
+      createOrder(mockItems, 200000, payment, invalidShipping)
+    ).rejects.toThrow("수령인 이름을 입력해주세요.");
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  it("주문 생성 시 배송 정보를 함께 저장한다", async () => {
+    const supabaseMock = buildSupabaseMock({
+      user: { id: "u1", email: "buyer@test.com" },
+      orderInsertResult: { data: { id: "order-4" }, error: null },
+      itemsInsertResult: { error: null },
+    });
+    (createClient as jest.Mock).mockResolvedValue(supabaseMock);
+
+    await createOrder(mockItems, 200000, payment, mockShipping);
+
+    const ordersTable = supabaseMock.from.mock.results.find(
+      (r, i) => supabaseMock.from.mock.calls[i][0] === "orders"
+    )!.value;
+    expect(ordersTable.insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        recipient_name: mockShipping.recipientName,
+        phone: mockShipping.phone,
+        zip_code: mockShipping.zipCode,
+        address: mockShipping.address,
+        address_detail: mockShipping.addressDetail,
+        delivery_request: mockShipping.deliveryRequest,
+      })
+    );
+  });
+});
+
+describe("getLastShippingInfo", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it("로그인하지 않았으면 null을 반환한다", async () => {
+    (createClient as jest.Mock).mockResolvedValue({
+      auth: { getUser: jest.fn().mockResolvedValue({ data: { user: null } }) },
+    });
+    expect(await getLastShippingInfo()).toBeNull();
+  });
+
+  it("배송 정보가 담긴 이전 주문이 없으면 null을 반환한다", async () => {
+    const maybeSingle = jest.fn().mockResolvedValue({ data: null });
+    const limit = jest.fn().mockReturnValue({ maybeSingle });
+    const order = jest.fn().mockReturnValue({ limit });
+    const not = jest.fn().mockReturnValue({ order });
+    const eq = jest.fn().mockReturnValue({ not });
+    const select = jest.fn().mockReturnValue({ eq });
+    (createClient as jest.Mock).mockResolvedValue({
+      auth: {
+        getUser: jest.fn().mockResolvedValue({ data: { user: { id: "u1" } } }),
+      },
+      from: jest.fn().mockReturnValue({ select }),
+    });
+
+    expect(await getLastShippingInfo()).toBeNull();
+  });
+
+  it("가장 최근 주문의 배송 정보를 반환한다", async () => {
+    const maybeSingle = jest.fn().mockResolvedValue({
+      data: {
+        recipient_name: "홍길동",
+        phone: "010-1234-5678",
+        zip_code: "12345",
+        address: "경기도 고양시 일산동구 중앙로 123",
+        address_detail: "101동 202호",
+        delivery_request: null,
+      },
+    });
+    const limit = jest.fn().mockReturnValue({ maybeSingle });
+    const order = jest.fn().mockReturnValue({ limit });
+    const not = jest.fn().mockReturnValue({ order });
+    const eq = jest.fn().mockReturnValue({ not });
+    const select = jest.fn().mockReturnValue({ eq });
+    (createClient as jest.Mock).mockResolvedValue({
+      auth: {
+        getUser: jest.fn().mockResolvedValue({ data: { user: { id: "u1" } } }),
+      },
+      from: jest.fn().mockReturnValue({ select }),
+    });
+
+    expect(await getLastShippingInfo()).toEqual({
+      recipientName: "홍길동",
+      phone: "010-1234-5678",
+      zipCode: "12345",
+      address: "경기도 고양시 일산동구 중앙로 123",
+      addressDetail: "101동 202호",
+      deliveryRequest: "",
+    });
   });
 });

@@ -59,21 +59,26 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          <div className="relative aspect-square max-w-md w-full mx-auto rounded-2xl overflow-hidden shadow-xl border border-gold/15 bg-white">
-            {heroProduct?.images[0] ? (
+          {heroProduct?.images[0] ? (
+            <Link
+              href={`/products/${heroProduct.id}`}
+              className="group relative aspect-square max-w-md w-full mx-auto rounded-2xl overflow-hidden shadow-xl border border-gold/15 bg-white block transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]"
+            >
               <Image
                 src={heroProduct.images[0]}
                 alt={heroProduct.name}
                 fill
                 priority
-                className="object-cover"
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
-            ) : (
+            </Link>
+          ) : (
+            <div className="relative aspect-square max-w-md w-full mx-auto rounded-2xl overflow-hidden shadow-xl border border-gold/15 bg-white">
               <div className="absolute inset-0 flex items-center justify-center text-7xl">
                 🏠
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </section>
 

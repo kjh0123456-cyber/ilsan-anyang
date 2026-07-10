@@ -76,6 +76,18 @@ export default async function OrdersPage() {
                 <span>합계</span>
                 <span>{formatPrice(order.total_amount)}</span>
               </div>
+              {order.recipient_name && (
+                <div className="mt-4 pt-4 border-t text-sm text-muted-foreground">
+                  <p className="font-medium text-navy mb-1">배송지</p>
+                  <p>
+                    {order.recipient_name} · {order.phone}
+                  </p>
+                  <p>
+                    ({order.zip_code}) {order.address} {order.address_detail}
+                  </p>
+                  {order.delivery_request && <p>{order.delivery_request}</p>}
+                </div>
+              )}
             </div>
           );
         })}

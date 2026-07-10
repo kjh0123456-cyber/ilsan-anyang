@@ -154,3 +154,5 @@
 - 2026-07-09 18:02:21 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\check-cart-header.js
 - 2026-07-09 18:03:11 | C:\temp\claude\C--Users-----claude\1333eb45-1a10-46c4-9ac2-18d2c129e5bf\scratchpad\pw-test\debug-add-to-cart.js
 - 2026-07-09 22:29:41 | C:\Users\김종해\claude\ilsan-anyang\components\admin\admin-sidebar.tsx
+- 2026-07-10 09:19:34 | C:\Users\김종해\claude\ilsan-anyang\supabase\migrations\005_order_shipping_info.sql
+- 2026-07-10 09:22:36 | C:\Users\김종해\claude\ilsan-anyang\components\checkout\shipping-form.tsx
