@@ -98,6 +98,7 @@ export default function SignupForm({ redirectTo }: { redirectTo: string }) {
           required
           placeholder="8자 이상"
           minLength={8}
+          onFocus={(e) => e.currentTarget.select()}
         />
       </div>
       <Button

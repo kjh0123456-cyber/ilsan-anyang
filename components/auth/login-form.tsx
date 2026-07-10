@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import type { AnimationEvent } from "react";
+import type { AnimationEvent, FocusEvent } from "react";
 import { toast } from "sonner";
 import { login } from "@/lib/actions/auth";
 import { useCart } from "@/hooks/use-cart";
@@ -25,6 +25,19 @@ function selectOnAutofill(e: AnimationEvent<HTMLInputElement>) {
   }
 }
 
+// Defense in depth: the animationstart trick above only fires for the one
+// browser-internal transition it's watching for. Any other route stray text
+// reaches the field — most notably the page being restored from the
+// browser's back/forward cache, which resumes the DOM exactly as it was
+// frozen without re-running mount effects or a fresh autofill — slips past
+// it, and the field is left with unselected leftover text. Selecting
+// on focus fixes the actual symptom directly (whatever is in the field
+// gets highlighted the moment the user clicks in, so typing replaces it)
+// without needing to know why it was there.
+function selectAllOnFocus(e: FocusEvent<HTMLInputElement>) {
+  e.currentTarget.select();
+}
+
 export default function LoginForm({ redirectTo }: { redirectTo: string }) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -34,6 +47,18 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
   useEffect(() => {
     if (emailRef.current) emailRef.current.value = "";
     if (passwordRef.current) passwordRef.current.value = "";
+
+    // Restoring from the back/forward cache resumes the page exactly as it
+    // was frozen, without re-running mount effects — so a value left in the
+    // fields before navigating away would otherwise survive a bfcache
+    // restore untouched.
+    function handlePageShow(e: PageTransitionEvent) {
+      if (!e.persisted) return;
+      if (emailRef.current) emailRef.current.value = "";
+      if (passwordRef.current) passwordRef.current.value = "";
+    }
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
   }, []);
 
   function handleSubmit(formData: FormData) {
@@ -91,6 +116,7 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
           placeholder="hello@example.com"
           className="autofill-detect"
           onAnimationStart={selectOnAutofill}
+          onFocus={selectAllOnFocus}
         />
       </div>
       <div className="space-y-2">
@@ -105,6 +131,7 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
           placeholder="••••••••"
           className="autofill-detect"
           onAnimationStart={selectOnAutofill}
+          onFocus={selectAllOnFocus}
         />
       </div>
       <Button

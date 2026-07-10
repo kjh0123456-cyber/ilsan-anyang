@@ -62,6 +62,7 @@ export default function ResetPasswordPage() {
               required
               placeholder="8자 이상"
               minLength={8}
+              onFocus={(e) => e.currentTarget.select()}
             />
           </div>
           <div className="space-y-2">
@@ -74,6 +75,7 @@ export default function ResetPasswordPage() {
               required
               placeholder="8자 이상"
               minLength={8}
+              onFocus={(e) => e.currentTarget.select()}
             />
           </div>
           <Button
