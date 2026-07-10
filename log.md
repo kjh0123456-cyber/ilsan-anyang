@@ -157,3 +157,4 @@
 - 2026-07-10 09:19:34 | C:\Users\김종해\claude\ilsan-anyang\supabase\migrations\005_order_shipping_info.sql
 - 2026-07-10 09:22:36 | C:\Users\김종해\claude\ilsan-anyang\components\checkout\shipping-form.tsx
 - 2026-07-10 11:12:57 | C:\temp\claude\verify\cdp-tab.mjs
+- 2026-07-10 12:36:22 | C:\Users\김종해\claude\ilsan-anyang\components\layout\header-nav.tsx

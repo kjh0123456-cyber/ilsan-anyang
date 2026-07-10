@@ -1,16 +1,10 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { ShoppingCart, User, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getUser, isAdmin, logout } from "@/lib/actions/auth";
-
-const NAV_LINKS = [
-  { href: "/products?category=vacuum", label: "로봇청소기" },
-  { href: "/products?category=air", label: "공기청정기" },
-  { href: "/products?category=speaker", label: "스마트스피커" },
-  { href: "/products?category=light", label: "스마트조명" },
-  { href: "/products?category=hub", label: "IoT 허브" },
-];
+import HeaderNav, { NavLinksFallback } from "@/components/layout/header-nav";
 
 export default async function Header() {
   const user = await getUser();
@@ -28,19 +22,13 @@ export default async function Header() {
           </Link>
 
           <nav
-            className={`hidden items-center gap-6 shrink-0 ${
+            className={`hidden items-center gap-2 shrink-0 ${
               admin ? "xl:flex" : "lg:flex"
             }`}
           >
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm text-gray-600 hover:text-navy transition-colors whitespace-nowrap rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
-              >
-                {link.label}
-              </Link>
-            ))}
+            <Suspense fallback={<NavLinksFallback />}>
+              <HeaderNav />
+            </Suspense>
           </nav>
 
           <div className="flex items-center gap-2 shrink-0">
