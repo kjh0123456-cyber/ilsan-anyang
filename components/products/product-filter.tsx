@@ -27,7 +27,13 @@ interface FilterState {
   sort: string;
 }
 
-export default function ProductFilter({ products }: { products: Product[] }) {
+export default function ProductFilter({
+  products,
+  isAdmin = false,
+}: {
+  products: Product[];
+  isAdmin?: boolean;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const urlState: FilterState = {
@@ -57,9 +63,12 @@ export default function ProductFilter({ products }: { products: Product[] }) {
 
   return (
     <>
-      {/* lg+ already has the category picker in the header nav; this row is
-          the only category picker mobile/tablet users have while on this page. */}
-      <div className="flex flex-wrap gap-1 mb-2 lg:hidden">
+      {/* Mirrors the header nav's breakpoint (components/layout/header.tsx),
+          which shows the category picker at lg for regular users but only at
+          xl for admins (their extra badge/button need the wider header). This
+          row fills exactly the gap the header leaves below that breakpoint,
+          so there's never a width where neither picker is visible. */}
+      <div className={cn("flex flex-wrap gap-1 mb-2", isAdmin ? "xl:hidden" : "lg:hidden")}>
         {CATEGORIES.map((cat) => {
           const selected = optimistic.category === cat.value;
           return (

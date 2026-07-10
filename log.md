@@ -160,3 +160,5 @@
 - 2026-07-10 12:36:22 | C:\Users\김종해\claude\ilsan-anyang\components\layout\header-nav.tsx
 - 2026-07-10 13:31:37 | C:\Users\김종해\.claude\jobs\92404e75\tmp\mobile-check.mjs
 - 2026-07-10 13:36:40 | C:\Users\김종해\.claude\jobs\92404e75\tmp\mobile-check2.mjs
+- 2026-07-10 15:16:16 | C:\Users\김종해\.claude\jobs\92404e75\tmp\mobile-prod-check.mjs
+- 2026-07-10 15:17:43 | C:\Users\김종해\.claude\jobs\92404e75\tmp\tablet-check.mjs
